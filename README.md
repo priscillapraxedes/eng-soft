@@ -68,4 +68,4 @@ datas de semestre, classes sem CSS, âncoras quebradas e colisão de nomes de cl
 HTML/CSS/JS puro, sem build e sem framework. Única dependência externa é o
 [Motion](https://motion.dev) via CDN, carregado dentro de `try/catch` — se a CDN cair
 (ou a sala estiver sem internet), o site continua funcionando com animações CSS.
-<!-- test commit & push -->
+<!-- test commit & push: ok -->
