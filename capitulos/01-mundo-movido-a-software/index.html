@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cap 01 — O mundo movido a software · Engenharia de Software</title>
+<meta name="description" content="Capítulo 01 da disciplina Engenharia de Software: o que é engenharia, o que acontece quando o software falha e por que o processo importa.">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=JetBrains+Mono:wght@400;700&amp;family=Nunito:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../../shared/styles.css">
+<link rel="stylesheet" href="../../shared/components.css">
+<link rel="stylesheet" href="../../shared/animations.css">
+<style>
+  /* =========================================================
+     CSS LOCAL DO CAPÍTULO 01
+     Regra da casa: TODA classe com fonte mono repete
+     font-variant-ligatures:none + font-feature-settings,
+     senão "->" vira seta e o aluno copia errado.
+     ========================================================= */
+
+  /* ---------- citação de definição ---------- */
+  .cita{
+    margin:18px 0;padding:20px 24px;border-radius:14px;
+    background:var(--surface2);
+    border-left:4px solid var(--blueprint);
+  }
+  .cita p{font-size:1.02rem;line-height:1.7;color:var(--text)}
+  .cita strong{color:var(--blueprint)}
+  .cita-fonte{
+    display:block;margin-top:10px;
+    font-size:0.78rem;color:var(--text-dim);font-style:italic;
+  }
+
+  /* ---------- programa x produto de software ---------- */
+  .pp-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0;
+  }
+  @media (max-width:640px){.pp-grid{grid-template-columns:1fr}}
+  .pp-col{
+    padding:20px;border-radius:16px;
+    background:var(--surface2);
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  .pp-col.prog{border-color:rgba(143,160,184,0.28)}
+  .pp-col.prod{border-color:rgba(56,189,248,0.35);background:linear-gradient(160deg,rgba(56,189,248,0.07),rgba(56,189,248,0.01))}
+  .pp-tag{
+    display:inline-block;margin-bottom:12px;
+    font-family:'JetBrains Mono',monospace;
+    font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+    font-size:0.64rem;font-weight:700;letter-spacing:2px;
+    padding:4px 11px;border-radius:20px;
+    background:rgba(255,255,255,0.06);color:var(--text-dim);
+  }
+  .pp-col.prod .pp-tag{background:rgba(56,189,248,0.14);color:var(--blueprint)}
+  .pp-col > p{font-size:0.95rem;font-weight:800;color:var(--text);margin-bottom:10px}
+  .pp-list{list-style:none;margin:0;padding:0}
+  .pp-list li{
+    display:flex;gap:9px;align-items:flex-start;
+    font-size:0.87rem;color:var(--text-dim);line-height:1.55;
+    margin-bottom:8px;
+  }
+  .pp-list li::before{content:'▪';color:var(--blueprint);flex-shrink:0}
+
+  /* ---------- linha do tempo: extras deste capítulo ---------- */
+  .tl-processo{
+    margin-top:12px;padding:10px 14px;border-radius:10px;
+    background:rgba(56,189,248,0.07);
+    border:1px dashed rgba(56,189,248,0.32);
+    font-size:0.86rem;line-height:1.55;color:var(--text-dim);
+  }
+  .tl-processo strong{color:var(--blueprint);font-weight:800}
+  .tl-fonte{
+    display:block;margin-top:10px;
+    font-size:0.76rem;line-height:1.5;color:var(--text-dim);
+    opacity:0.85;font-style:italic;
+  }
+  .tl-item p + p{margin-top:9px}
+
+  /* =========================================================
+     MIOLO: Anatomia de um fracasso
+     ========================================================= */
+  .anat-caso{
+    padding:14px 16px;border-radius:14px;margin-bottom:16px;
+    background:linear-gradient(135deg,rgba(255,107,107,0.10),rgba(255,107,107,0.02));
+    border:1px solid rgba(255,107,107,0.22);
+  }
+  .anat-caso-nome{
+    font-size:1.02rem;font-weight:900;color:var(--text);margin-bottom:4px;
+  }
+  .anat-caso-linha{font-size:0.9rem;color:var(--text-dim);line-height:1.6;margin:0}
+  .anat-caso-custo{
+    margin-top:9px;display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+    font-size:0.66rem;font-weight:700;letter-spacing:0.6px;
+    color:var(--teste);background:rgba(255,107,107,0.12);
+    padding:4px 10px;border-radius:20px;
+  }
+
+  /* --- a cadeia (tira compacta de 5 elos) --- */
+  .anat-cadeia{
+    display:flex;align-items:stretch;gap:10px;
+    list-style:none;padding:0;margin:0 0 18px;
+  }
+  .anat-elo{
+    position:relative;flex:1 1 0;min-width:0;
+    display:flex;flex-direction:column;align-items:center;gap:5px;
+    padding:10px 3px;border-radius:12px;
+    background:var(--surface2);border:1px solid rgba(255,255,255,0.07);
+    opacity:0.32;transition:opacity 0.35s,border-color 0.35s,box-shadow 0.35s,transform 0.35s;
+  }
+  .anat-elo::after{
+    content:"";position:absolute;top:50%;right:-11px;width:12px;height:2px;
+    background:rgba(255,255,255,0.12);transform:translateY(-50%);transition:background 0.35s;
+  }
+  .anat-elo:last-child::after{display:none}
+  .anat-elo.on{opacity:1;transform:translateY(-2px)}
+  .anat-elo.on::after{background:rgba(56,189,248,0.5)}
+  .anat-elo-ic{font-size:1.05rem;line-height:1}
+  .anat-elo-nome{
+    font-family:'JetBrains Mono',monospace;
+    font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+    font-size:0.55rem;font-weight:700;letter-spacing:0.4px;
+    color:var(--text-dim);text-align:center;
+  }
+  .anat-elo.on .anat-elo-nome{color:var(--text)}
+  .anat-elo.on[data-st="intro"],
+  .anat-elo.on[data-st="boom"]{border-color:var(--teste);box-shadow:0 4px 16px var(--glow-teste)}
+  .anat-elo.on[data-st="miss"]{border-color:var(--accent5);box-shadow:0 4px 16px rgba(247,183,49,0.18)}
+  .anat-elo.on[data-st="ok"]{border-color:rgba(255,255,255,0.18)}
+
+  /* --- detalhe de cada estágio --- */
+  .anat-fases{margin-bottom:4px}
+  .anat-fase{
+    border-left:3px solid rgba(255,255,255,0.16);
+    background:var(--surface2);border-radius:0 12px 12px 0;
+    padding:12px 14px;margin-bottom:10px;
+    opacity:0;transform:translateY(10px);
+    transition:opacity 0.4s ease,transform 0.4s ease;
+  }
+  .anat-fase.on{opacity:1;transform:none}
+  .anat-fase[data-st="intro"],
+  .anat-fase[data-st="boom"]{border-left-color:var(--teste)}
+  .anat-fase[data-st="miss"]{border-left-color:var(--accent5)}
+  .anat-fase-top{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:7px}
+  .anat-fase-ic{font-size:1.05rem;line-height:1}
+  .anat-etapa{
+    font-family:'JetBrains Mono',monospace;
+    font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+    font-size:0.68rem;font-weight:700;letter-spacing:1.2px;
+    color:var(--text);
+  }
+  .anat-st{
+    font-size:0.6rem;font-weight:900;letter-spacing:0.9px;
+    padding:3px 9px;border-radius:20px;
+    background:rgba(255,255,255,0.07);color:var(--text-dim);
+  }
+  .anat-fase[data-st="intro"] .anat-st,
+  .anat-fase[data-st="boom"] .anat-st{background:rgba(255,107,107,0.14);color:var(--teste)}
+  .anat-fase[data-st="miss"] .anat-st{background:rgba(247,183,49,0.14);color:var(--accent5)}
+  .anat-fato{font-size:0.88rem;line-height:1.65;color:var(--text);margin:0}
+  .anat-barreira{
+    margin:9px 0 0;padding:8px 11px;border-radius:9px;
+    background:rgba(56,189,248,0.07);
+    border:1px dashed rgba(56,189,248,0.32);
+    font-size:0.82rem;line-height:1.55;color:var(--text-dim);
+  }
+  .anat-barreira strong{color:var(--blueprint);font-weight:800}
+
+  /* --- console (dentro do .sim-out padrao) --- */
+  .anat-log .ln{
+    display:grid;grid-template-columns:16ch 1fr;column-gap:10px;
+    font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+  }
+  .anat-log .ln.full{display:block}
+
+  /* --- veredito --- */
+  .anat-veredito{
+    margin-top:16px;padding:16px 18px;border-radius:14px;
+    display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap;
+    background:linear-gradient(135deg,rgba(247,183,49,0.12),rgba(247,183,49,0.02));
+    border:1px solid rgba(247,183,49,0.3);
+    opacity:0;transform:translateY(10px);
+    transition:opacity 0.45s ease,transform 0.45s ease;
+  }
+  .anat-veredito[hidden]{display:none}
+  .anat-veredito.on{opacity:1;transform:none}
+  .anat-vd-num{
+    font-family:'JetBrains Mono',monospace;
+    font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+    font-size:2.6rem;font-weight:700;line-height:1;color:var(--accent5);
+    min-width:52px;text-align:center;margin-top:-4px;
+  }
+  .anat-vd-txt{flex:1;min-width:210px}
+  .anat-vd-txt p{margin:0;font-size:0.9rem;line-height:1.6;color:var(--text)}
+  .anat-vd-txt p strong{color:var(--accent5)}
+  .anat-vd-frase{
+    display:block;margin-top:10px;
+    font-size:1rem;font-weight:900;color:var(--text);
+    border-left:3px solid var(--accent5);padding-left:11px;
+  }
+  .anat-vd-moral{
+    display:block;margin-top:9px;font-size:0.84rem;line-height:1.55;color:var(--text-dim);
+  }
+
+  @media (max-width:560px){
+    .anat-cadeia{gap:7px}
+    .anat-elo::after{right:-8px;width:9px}
+    .anat-elo-nome{display:none}
+    .anat-elo-num{
+      font-family:'JetBrains Mono',monospace;
+      font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+      font-size:0.58rem;color:var(--text-dim);
+    }
+    .anat-log .ln{grid-template-columns:1fr;row-gap:0}
+    .anat-log .ln:not(.full) > span:last-child{padding-left:14px}
+    .anat-vd-num{font-size:2.1rem;min-width:44px}
+  }
+  @media (min-width:561px){
+    .anat-elo-num{display:none}
+  }
+
+  /* =========================================================
+     MIOLO: triângulo de restrições
+     ========================================================= */
+  .tri-v{
+    fill:var(--surface3);stroke:var(--blueprint);stroke-width:2;
+    transition:fill 0.3s,stroke 0.3s,r 0.3s;
+  }
+  .tri-v.on{fill:var(--accent5);stroke:var(--accent5)}
+  .tri-lab{font-weight:700}
+  .tri-out{
+    margin-top:6px;padding:16px 18px;border-radius:14px;
+    background:var(--surface2);
+    border-left:4px solid var(--accent5);
+  }
+  .tri-titulo{font-size:1rem;font-weight:900;color:var(--accent5);margin-bottom:7px}
+  .tri-texto{font-size:0.92rem;line-height:1.65;color:var(--text);margin:0}
+  .tri-lista{list-style:none;margin:12px 0 0;padding:0}
+  .tri-lista li{
+    display:flex;gap:9px;align-items:flex-start;
+    font-size:0.86rem;line-height:1.55;color:var(--text-dim);margin-bottom:7px;
+  }
+  .tri-lista li::before{content:'▪';color:var(--accent5);flex-shrink:0;font-weight:800}
+
+  /* =========================================================
+     NÚMEROS FAMOSOS (com ressalva de fonte)
+     ========================================================= */
+  .stat-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:14px;margin:20px 0;
+  }
+  .stat{
+    padding:18px;border-radius:16px;
+    background:var(--surface2);
+    border:1px solid rgba(255,255,255,0.06);
+    display:flex;flex-direction:column;
+  }
+  .stat-num{
+    font-family:'JetBrains Mono',monospace;
+    font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+    font-size:1.7rem;font-weight:700;line-height:1;
+    color:var(--blueprint);margin-bottom:9px;
+  }
+  .stat.duvidoso .stat-num{color:var(--teste)}
+  .stat-desc{font-size:0.87rem;line-height:1.55;color:var(--text);flex:1}
+  .stat-fonte{
+    margin-top:11px;padding-top:10px;
+    border-top:1px dashed rgba(255,255,255,0.10);
+    font-size:0.75rem;line-height:1.5;color:var(--text-dim);font-style:italic;
+  }
+  .stat.duvidoso .stat-fonte{color:var(--accent5);font-style:normal}
+
+  /* ---------- gancho do próximo capítulo ---------- */
+  .gancho{
+    margin:26px 0 8px;padding:20px 24px;border-radius:16px;
+    background:linear-gradient(135deg,rgba(247,183,49,0.09),rgba(247,183,49,0.01));
+    border:1px solid rgba(247,183,49,0.25);
+  }
+  .gancho h4{
+    font-family:'Caveat',cursive;font-size:1.6rem;
+    color:var(--etica);margin-bottom:6px;line-height:1;
+  }
+  .gancho p{font-size:0.94rem;color:var(--text);line-height:1.7}
+  .gancho p + p{margin-top:10px}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<!-- ═══════════════ SIDEBAR ═══════════════ -->
+<button class="menu-toggle" onclick="openSidebar()" aria-label="Abrir menu">☰</button>
+<div class="sidebar-overlay"></div>
+<nav class="sidebar-nav">
+  <button class="sidebar-close" onclick="closeSidebar()" aria-label="Fechar">✕</button>
+  <div class="sidebar-header">
+    <h3>📐 Cap 01 · O mundo movido a software</h3>
+    <a class="sidebar-back" href="../../">← Voltar ao hub</a>
+  </div>
+  <div class="sidebar-group">
+    <div class="sidebar-group-title">Neste capítulo</div>
+    <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span> Aquecimento</a>
+    <a class="sidebar-link" onclick="goTo('o-que-e')"><span class="dot" style="background:var(--blueprint)"></span> 🏗️ Engenharia não é programação</a>
+    <a class="sidebar-link" onclick="goTo('desastres')"><span class="dot" style="background:var(--teste)"></span> 💥 Quando o software falha</a>
+    <a class="sidebar-link" onclick="goTo('anatomia')"><span class="dot" style="background:var(--teste)"></span> 🧨 Anatomia de um fracasso</a>
+    <a class="sidebar-link" onclick="goTo('o-que-busca')"><span class="dot" style="background:var(--accent5)"></span> 🎯 O que a engenharia busca</a>
+    <a class="sidebar-link" onclick="goTo('mito')"><span class="dot" style="background:var(--mito)"></span> Mito × Realidade</a>
+    <a class="sidebar-link" onclick="goTo('ia')"><span class="dot" style="background:var(--ia)"></span> 🤖 E a IA nisso?</a>
+    <a class="sidebar-link" onclick="goTo('dinamica')"><span class="dot" style="background:var(--dinamica)"></span> 🎲 Dinâmica em sala</a>
+    <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--agil)"></span> Resumo</a>
+  </div>
+</nav>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="hero-icons" data-motion="float">🌍 ⚙️ 💥</div>
+  <span class="hero-badge">Capítulo 01</span>
+  <h1>O mundo movido a software</h1>
+  <p style="font-family:'Caveat',cursive;font-size:clamp(1.5rem,4vw,2.2rem);color:var(--blueprint);margin:-4px 0 16px;font-weight:700">
+    Saber construir não é o mesmo que saber o que construir
+  </p>
+  <p class="subtitle">
+    Elevador, semáforo, folha de pagamento, radioterapia, Pix. Praticamente tudo que você usa hoje
+    depende de software que <strong style="color:var(--text)">outra pessoa</strong> escreveu e que
+    <strong style="color:var(--text)">outra pessoa ainda</strong> mantém. Este capítulo é sobre o que
+    acontece quando isso dá errado — e sobre a disciplina que existe para evitar.
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip processo"><span aria-hidden="true">🏗️</span>o que é engenharia</span>
+    <span class="stack-chip teste"><span aria-hidden="true">💥</span>quando o software falha</span>
+    <span class="stack-chip etica"><span aria-hidden="true">🎯</span>por que processo importa</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════ 1. AQUECIMENTO ═══════════════ -->
+  <section class="step-section" id="aquecimento">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🤔</div>
+      <div>
+        <div class="step-title">Aquecimento</div>
+        <div class="step-sub">Antes da teoria, uma pergunta desconfortável</div>
+      </div>
+    </div>
+
+    <div class="quiz">
+      <div class="quiz-q">
+        <span class="q-emoji">☢️</span>
+        Uma máquina de radioterapia entregou a pacientes doses de radiação centenas de vezes maiores
+        que a prescrita. Onde estava o erro?
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">Num bug de código: um contador estourou</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Numa cadeia de decisões de projeto que ninguém barrou</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">No operador, que digitou rápido demais</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">No hardware, que estava descalibrado</button>
+      </div>
+      <div class="quiz-feedback"
+           data-correct="Exatamente."
+           data-wrong="Entendo a resposta — mas ela é a armadilha do capítulo."
+           data-explain="O contador estourou de verdade, e o operador digitou rápido de verdade. Só que o mesmo defeito já existia nas máquinas anteriores e nunca machucou ninguém, porque havia uma trava mecânica no caminho. Alguém decidiu remover a trava e confiar só no software. Outra pessoa decidiu que software não entrava na análise de risco. Um único programador escreveu o código, sem revisão. Ninguém testou máquina e software juntos. Nenhuma dessas decisões é 'um bug' — e é a soma delas que mata. É disso que trata Engenharia de Software."></div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════ 2. ENGENHARIA NÃO É PROGRAMAÇÃO ═══════════════ -->
+  <section class="step-section" id="o-que-e">
+    <div class="step-header">
+      <div class="step-number sn-blueprint">🏗️</div>
+      <div>
+        <div class="step-title">Engenharia <em>não é</em> programação</div>
+        <div class="step-sub">Uma coisa é levantar a parede. Outra é decidir onde ela vai.</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p>Você já programa. Isso significa que você sabe transformar uma ideia em instruções que a
+      máquina executa — e isso é uma habilidade real, difícil, que muita gente não tem.</p>
+      <p>Só que quase tudo que dá errado em software profissional <strong>não dá errado nessa
+      etapa</strong>. Dá errado antes (ninguém entendeu direito o problema), ao lado (a peça reusada
+      trouxe uma premissa junto) ou depois (o sistema mudou de dono, de contexto ou de escala e
+      ninguém revisou nada).</p>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-title">A planta da casa</div>
+      <p>O <strong>pedreiro</strong> levanta a parede. E levanta bem: no prumo, no esquadro, com a
+      massa certa. Ninguém constrói casa sem pedreiro.</p>
+      <p>O <strong>engenheiro</strong> responde outras perguntas. Onde essa parede vai? Ela é
+      estrutural — se cair, o que cai junto? Aguenta o segundo andar que o cliente <em>ainda vai
+      pedir</em>? Quanto custa? Se o cliente mudar de ideia com a obra na metade, o que dá para
+      mudar e o que não dá mais?</p>
+      <p>Repare que <strong>nenhuma dessas perguntas é sobre como assentar tijolo</strong>. E repare
+      também que, se ninguém as fizer, o pedreiro vai fazer um trabalho impecável — numa parede que
+      está no lugar errado.</p>
+    </div>
+
+    <div class="cita">
+      <p>Ian Sommerville define <strong>Engenharia de Software</strong> como a disciplina de
+      engenharia que se ocupa de <strong>todos os aspectos da produção de software</strong> — do
+      início da especificação do sistema até a manutenção, depois que ele já entrou em operação.</p>
+      <span class="cita-fonte">Repare nas duas pontas: começa <em>antes</em> de existir código e não
+      termina quando o sistema entra no ar.</span>
+    </div>
+
+    <h3 style="font-size:1.15rem;font-weight:900;margin:28px 0 6px">Programa × produto de software</h3>
+    <p class="text-dim" style="font-size:0.93rem">
+      A diferença não é de tamanho nem de linguagem. É de quem vai usar e por quanto tempo.
+    </p>
+
+    <div class="pp-grid">
+      <div class="pp-col prog">
+        <span class="pp-tag">PROGRAMA</span>
+        <p>Funciona na <em>sua</em> máquina.</p>
+        <ul class="pp-list">
+          <li>Você conhece as entradas que ele aguenta</li>
+          <li>Você lembra por que fez daquele jeito</li>
+          <li>Se quebrar, você conserta em minutos</li>
+          <li>Vida útil: até você terminar o que queria</li>
+          <li>Documentação: a sua memória</li>
+        </ul>
+      </div>
+      <div class="pp-col prod">
+        <span class="pp-tag">PRODUTO DE SOFTWARE</span>
+        <p>Funciona na máquina de gente que você não conhece.</p>
+        <ul class="pp-list">
+          <li>Recebe entradas que você nunca imaginou</li>
+          <li>Roda em ambientes que você nunca viu</li>
+          <li>Quando quebra, quem conserta talvez não seja você</li>
+          <li>Vida útil: anos — provavelmente mais que a sua permanência na empresa</li>
+          <li>Documentação: a única memória que sobra</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="concept">
+      <div class="concept-title">O ponto-chave do capítulo</div>
+      <p>Engenharia de Software aparece quando entram <strong>outras pessoas</strong> e
+      <strong>tempo</strong> na conta.</p>
+      <p>Sozinho, numa tarde, resolvendo um problema seu: você não precisa de requisito escrito, nem
+      de teste automatizado, nem de padrão de commit. Nada disso é desperdício — é só que o custo
+      dessas coisas não se paga numa tarde.</p>
+      <p>Agora coloque cinco pessoas mexendo no mesmo código, um cliente que muda de ideia, um
+      usuário que você nunca vai conhecer e cinco anos de operação. <strong>Tudo o que era burocracia
+      vira a única coisa que segura o sistema em pé.</strong></p>
+    </div>
+
+    <div class="blueprint" data-legenda="programa vs produto">
+      <svg viewBox="0 0 700 320" role="img" aria-label="Diagrama: o que se acrescenta a um programa para ele virar um produto de software">
+        <!-- caixa PROGRAMA -->
+        <rect class="draw" style="--len:460" x="20" y="130" width="160" height="64" rx="10"
+              fill="none" stroke="#8fa0b8" stroke-width="2"/>
+        <text class="blueprint-label fade" x="100" y="167" text-anchor="middle" fill="#8fa0b8">PROGRAMA</text>
+
+        <!-- caixa PRODUTO -->
+        <rect class="draw" style="--len:480" x="510" y="130" width="170" height="64" rx="10"
+              fill="none" stroke="#38bdf8" stroke-width="2"/>
+        <text class="blueprint-label fade" x="595" y="158" text-anchor="middle">PRODUTO DE</text>
+        <text class="blueprint-label fade" x="595" y="176" text-anchor="middle">SOFTWARE</text>
+
+        <!-- seta principal -->
+        <path class="draw" style="--len:340" d="M188 162 L 495 162"
+              fill="none" stroke="#38bdf8" stroke-width="2"/>
+        <path class="fade" d="M495 162 L 483 156 L 483 168 Z" fill="#38bdf8"/>
+
+        <!-- haste que liga a lista à seta -->
+        <path class="draw" style="--len:50" d="M348 126 L 348 158"
+              fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 4"/>
+
+        <!-- o que se acrescenta -->
+        <text class="blueprint-label fade" x="348" y="26"  text-anchor="middle">+ requisitos escritos</text>
+        <text class="blueprint-label fade" x="348" y="48"  text-anchor="middle">+ testes</text>
+        <text class="blueprint-label fade" x="348" y="70"  text-anchor="middle">+ documentação</text>
+        <text class="blueprint-label fade" x="348" y="92"  text-anchor="middle">+ manutenção</text>
+        <text class="blueprint-label fade" x="348" y="114" text-anchor="middle">+ equipe</text>
+
+        <text class="blueprint-label fade" x="348" y="212" text-anchor="middle" fill="#8fa0b8">
+          o mesmo código, multiplicado por gente e por tempo
+        </text>
+      </svg>
+    </div>
+
+    <div class="tip">
+      <div class="tip-icon">💡</div>
+      <div class="tip-content">
+        <strong>Uma régua prática:</strong> se a resposta para "e se essa pessoa sair da empresa
+        amanhã?" for "aí ninguém mais entende esse trecho", você tem um programa, não um produto —
+        independentemente de quantos usuários ele já tenha.
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════ 3. QUANDO O SOFTWARE FALHA ═══════════════ -->
+  <section class="step-section" id="desastres">
+    <div class="step-header">
+      <div class="step-number sn-teste">💥</div>
+      <div>
+        <div class="step-title">Quando o software falha</div>
+        <div class="step-sub">Cinco casos reais, cinco setores diferentes, um padrão só</div>
+      </div>
+    </div>
+
+    <p style="font-size:0.95rem;color:var(--text-dim);margin-bottom:6px">
+      Leia cada caso prestando atenção em uma coisa: <strong style="color:var(--text)">em nenhum
+      deles a resposta é "o programador era ruim"</strong>. Em todos, o defeito técnico existiu — e
+      em todos ele atravessou vários pontos onde alguém poderia tê-lo barrado.
+    </p>
+
+    <div class="timeline">
+
+      <!-- THERAC-25 -->
+      <div class="tl-item grave">
+        <div class="tl-ano">1985 - 1987</div>
+        <div class="tl-titulo">Therac-25: a máquina que tratava e matava</div>
+        <p>O Therac-25 era um acelerador linear usado no tratamento de câncer. Ele operava em dois
+        modos: um feixe fraco de elétrons e um feixe de raios-X muito mais potente, que só é seguro
+        porque um alvo metálico grosso fica no caminho atenuando-o. Em seis ocasiões o software
+        colocou a máquina para disparar o feixe potente <strong>com o alvo fora de posição</strong>.</p>
+        <p>Tecnicamente, foram duas condições de corrida independentes. Numa delas, se o operador
+        editasse a prescrição e voltasse ao topo da tela em menos de oito segundos — exatamente o
+        tempo que os ímãs levam para se posicionar — o modo era atualizado na tela, mas não no
+        hardware. Na outra, um contador de um byte estourava a cada 256 passagens e, quando zerava,
+        o teste de posição do colimador era simplesmente pulado.</p>
+        <p>Só que o mesmo software vinha das máquinas anteriores, onde <strong>travas
+        eletromecânicas</strong> impediam fisicamente o disparo errado: lá, o mesmo defeito
+        queimava um fusível e ninguém se machucava. A fabricante removeu as travas e manteve o
+        código. A análise de risco praticamente excluiu o software, atribuindo a ele probabilidades
+        da ordem de 10 elevado a -11 sem nenhuma base empírica. O código era de um único programador,
+        sem revisão independente. Não existia plano de teste do sistema completo: hardware e software
+        eram exercitados separadamente. E a tela mostrava apenas códigos como "Malfunction 54", sem
+        significado documentado, que os operadores aprenderam a ignorar porque apareciam o tempo todo.</p>
+        <div class="tl-processo"><strong>O que falhou no processo:</strong> reusar software sem
+        refazer a análise de segurança depois de remover a barreira física que o protegia — e
+        continuar negando o problema por meses, culpando operadores e hardware.</div>
+        <span class="tl-custo">pelo menos 3 mortes · 6 acidentes documentados · doses de 16.500 a 25.000 rads contra prescrição da ordem de 180</span>
+        <span class="tl-fonte">Fonte primária: Leveson &amp; Turner, "An Investigation of the Therac-25
+        Accidents", IEEE Computer, jul/1993. Atenção: o número de mortes é disputado — 3 são
+        atribuídas diretamente às overdoses. A internet costuma repetir "6 mortes", o que confunde
+        acidentes com óbitos.</span>
+      </div>
+
+      <!-- ARIANE 5 -->
+      <div class="tl-item">
+        <div class="tl-ano">1996</div>
+        <div class="tl-titulo">Ariane 5, voo 501: 39 segundos de voo</div>
+        <p>O primeiro voo do foguete europeu Ariane 5 durou 39 segundos. A cerca de 3.700 metros de
+        altitude ele saiu da trajetória, se partiu e explodiu, destruindo os quatro satélites
+        científicos Cluster que levava.</p>
+        <p>Dentro do sistema de referência inercial, uma conversão de um número real de 64 bits para
+        um inteiro com sinal de 16 bits estourou. Essa conversão específica não tinha tratamento de
+        exceção — outras, no mesmo trecho, tinham. E, pela especificação, exceção significava
+        desligar o processador. Aos 37 segundos de voo, os dois sistemas inerciais — que rodavam
+        software idêntico — se desligaram com 72 milissegundos de diferença. Sem dados de atitude,
+        o computador de bordo leu o padrão de bits de <em>diagnóstico</em> como se fosse dado de
+        voo e comandou deflexão máxima dos bicos. Dois segundos depois, a carga aerodinâmica
+        arrancou os propulsores e disparou a autodestruição.</p>
+        <p>O código veio praticamente inalterado do Ariane 4. O trecho que estourou pertencia à
+        rotina de alinhamento da plataforma, que só produz resultado com sentido <strong>antes da
+        decolagem</strong> — o relatório de investigação diz que, depois que o lançador decola, essa
+        função não serve a nenhum propósito. Ela continuava rodando por 50 segundos por causa de um
+        requisito do Ariane 4 formulado mais de dez anos antes, usado uma única vez na história. E os
+        dados de trajetória do Ariane 5, que são bem diferentes, foram <em>deliberadamente</em>
+        deixados de fora da especificação do sistema inercial.</p>
+        <div class="tl-processo"><strong>O que falhou no processo:</strong> reuso sem revalidação de
+        premissas. O software funcionava perfeitamente — para outro foguete. Nenhum teste jamais
+        alimentou o sistema com a trajetória real do Ariane 5, e a redundância era cópia idêntica,
+        logo inútil contra erro de projeto.</div>
+        <span class="tl-custo">perda total do lançador e de 4 satélites · estimativas entre US$ 370 e 500 milhões</span>
+        <span class="tl-fonte">Fonte primária: relatório do Inquiry Board presidido por J.-L. Lions,
+        ESA/CNES, 19/07/1996. Atenção: o relatório não traz nenhuma cifra financeira — os valores em
+        dólar são estimativa de imprensa e variam conforme incluam ou não satélites, seguro e atraso.</span>
+      </div>
+
+      <!-- MARS CLIMATE ORBITER -->
+      <div class="tl-item">
+        <div class="tl-ano">1999</div>
+        <div class="tl-titulo">Mars Climate Orbiter: nove meses e meio até o erro aparecer</div>
+        <p>A sonda viajou nove meses e meio até Marte para se tornar o primeiro satélite
+        meteorológico interplanetário. Na manobra de inserção em órbita, passou a cerca de 57 km de
+        altitude em vez dos 226 km planejados — bem abaixo dos 80 km que ela suportava. O sinal se
+        perdeu 49 segundos antes do previsto e nunca mais voltou.</p>
+        <p>Um programa <strong>de solo</strong> calculava o impulso dos propulsores usados para
+        dessaturar as rodas de reação. A especificação de interface exigia que a saída fosse em
+        newton-segundo; o programa gravava em libra-força-segundo. Como uma libra-força vale 4,45
+        newtons, a navegação subestimou o efeito de cada disparo por esse fator. Não houve um erro
+        grande e único: foram centenas de erros minúsculos somados ao longo do cruzeiro, empurrando
+        a trajetória de leve, todo dia, para baixo. O software embarcado fazia a conta certa.</p>
+        <p>A especificação existia — e não foi seguida, porque nenhum processo verificava a
+        conformidade com ela. Não houve teste ponta a ponta do software de solo. A equipe de
+        navegação de operações entrou pouco antes do lançamento e não participou de nenhum teste nem
+        das revisões de projeto. Uma decisão de engenharia eliminou um modo de rotação que teria
+        cancelado o acúmulo, e essa decisão nunca chegou à navegação. E, durante meses, houve
+        preocupação técnica com as discrepâncias — só que ela circulou por e-mail, em vez do sistema
+        formal de registro de anomalias.</p>
+        <div class="tl-processo"><strong>O que falhou no processo:</strong> ter o documento de
+        interface não é controle nenhum. Controle é o processo que verifica se alguém de fato o
+        seguiu — e um canal formal onde a dúvida de um técnico não morre numa caixa de entrada.</div>
+        <span class="tl-custo">perda total da sonda · o famoso "erro de US$ 327,6 milhões" é o custo do programa Mars Surveyor '98 inteiro, orbitador mais o Mars Polar Lander</span>
+        <span class="tl-fonte">Fonte primária: Mars Climate Orbiter Mishap Investigation Board,
+        Phase I Report, 10/11/1999. O relatório não traz cifras: o número famoso vem de outra fonte
+        e cobre a missão dupla, não só o orbitador (o orbitador em si é citado em torno de US$ 125 mi).</span>
+      </div>
+
+      <!-- KNIGHT CAPITAL -->
+      <div class="tl-item">
+        <div class="tl-ano">2012</div>
+        <div class="tl-titulo">Knight Capital: 45 minutos, meio bilhão de dólares</div>
+        <p>A Knight Capital era uma das maiores corretoras de execução de ordens dos Estados Unidos.
+        Numa manhã, ao ativar um recurso novo, seu sistema de roteamento começou a comprar e vender
+        ações em looping descontrolado. Em 45 minutos a empresa acumulou posições que não queria e
+        perdeu mais de US$ 460 milhões — quase quebrando num único pregão.</p>
+        <p>Desde 2003 havia no sistema um código desativado chamado Power Peg: nunca removido dos
+        servidores, e acionado por uma chave de configuração. Em 2005, o contador que fazia esse
+        código <strong>parar</strong> de enviar ordens foi movido para outro ponto do fluxo — e
+        ninguém notou que a rotina antiga tinha ficado sem freio. Em 2012, ao implantar a
+        funcionalidade nova, a equipe reaproveitou exatamente aquela chave. A implantação era manual,
+        servidor por servidor: o código novo foi copiado para 7 dos 8 servidores de produção. Na
+        abertura do pregão, o oitavo leu a chave ligada e disparou o Power Peg.</p>
+        <p>A ordem da SEC registra que não havia um segundo técnico revisando a implantação, nem
+        procedimento formal escrito para ela, nem exigência de reteste do código antigo afetado pela
+        mudança. Noventa e sete e-mails automáticos de erro chegaram a funcionários <em>antes</em> da
+        abertura do mercado, identificando o problema — mas não tinham sido projetados como alertas,
+        então em geral ninguém os lia. Não havia botão de desligar. E, segundo as reconstruções do
+        incidente, a equipe, sob pressão e sem entender a causa, removeu o código novo dos 7
+        servidores que estavam <em>corretos</em>, espalhando o comportamento defeituoso.</p>
+        <div class="tl-processo"><strong>O que falhou no processo:</strong> o requisito estava certo
+        e o código novo estava certo. O que faltou foi processo de entrega — implantação verificada,
+        código morto removido, alerta com dono e um jeito de parar o sistema sem antes descobrir o
+        porquê.</div>
+        <span class="tl-custo">mais de US$ 460 milhões em 45 min · 4 milhões de ordens enviadas para atender 212 · multa de US$ 12 mi · ~75% do valor de mercado perdido em 2 dias</span>
+        <span class="tl-fonte">Fonte primária: ordem administrativa da SEC nº 34-70694, de
+        16/10/2013. A própria Knight anunciou "aproximadamente US$ 440 milhões"; a SEC consolidou
+        "mais de US$ 460 milhões" — as duas cifras circulam, e a diferença é de base e momento de
+        apuração.</span>
+      </div>
+
+      <!-- C&M SOFTWARE -->
+      <div class="tl-item">
+        <div class="tl-ano">2025</div>
+        <div class="tl-titulo">C&amp;M Software: quando o defeito não é de código</div>
+        <p>A C&amp;M é uma provedora de serviços de tecnologia que conecta instituições financeiras à
+        rede do Sistema Financeiro Nacional. Ela não movimenta dinheiro próprio: é o encanamento por
+        onde passam as mensagens de pagamento. Na noite de 1º para 2 de julho de 2025, criminosos
+        entraram na infraestrutura dela usando <strong>credenciais legítimas</strong> de um
+        funcionário e emitiram ordens de transferência a partir das contas-reserva que os bancos
+        mantêm no Banco Central. O dinheiro saiu por Pix, foi pulverizado e convertido em
+        criptomoedas.</p>
+        <p>Não foi um bug — e é exatamente por isso que este caso entra aqui. Um operador de TI
+        vendeu as próprias credenciais por R$ 5 mil e recebeu mais R$ 10 mil para continuar
+        executando comandos da própria máquina. Com credenciais válidas, os atacantes emitiram
+        transações no ambiente crítico sem segundo fator efetivo, sem segregação de funções, sem teto
+        de valor no caminho utilizado e sem detecção capaz de barrar em tempo real uma transferência
+        atípica saindo de conta-reserva.</p>
+        <p>O modelo de segurança protegia contra o atacante de fora — não contra quem já estava
+        dentro, nem contra o comprometimento do fornecedor. Compare com a Knight Capital: lá faltou o
+        segundo técnico revisando a implantação; aqui faltou o segundo par de olhos aprovando a
+        transação. O Banco Central suspendeu o acesso da C&amp;M ao sistema de pagamentos e, em
+        setembro de 2025, publicou um pacote de normas exigindo credenciamento, capital mínimo e
+        governança dessas provedoras — parte delas preferiu pedir descredenciamento a se adequar.</p>
+        <div class="tl-processo"><strong>O que falhou no processo:</strong> requisito não-funcional
+        de segurança também é requisito, e fornecedor crítico faz parte do seu sistema mesmo quando o
+        código não é seu. Faltou privilégio mínimo, limite de raio de explosão e detecção
+        comportamental.</div>
+        <span class="tl-custo">valor disputado: de R$ 400 milhões a cerca de R$ 1 bilhão, conforme a fonte</span>
+        <span class="tl-fonte">Agência Brasil/EBC para a atuação do Banco Central e as suspensões
+        cautelares; Resolução BCB nº 498, de 05/09/2025, para as novas exigências de credenciamento.
+        Não existe número oficial consolidado do desvio — trate sempre como faixa, nunca como cifra
+        exata.</span>
+      </div>
+
+    </div>
+
+    <div class="concept">
+      <div class="concept-title">O padrão que se repete</div>
+      <p>Radioterapia, foguete, sonda espacial, corretora e sistema de pagamentos. Setores que não
+      têm nada em comum — e a mesma estrutura de falha em todos:</p>
+      <p><strong>1.</strong> Alguém reusou algo (código, chave de configuração, especificação, acesso)
+      sem revalidar as premissas que vinham junto. <strong>2.</strong> Uma barreira que existia foi
+      removida ou nunca foi criada. <strong>3.</strong> O teste que teria pego o problema nunca foi
+      feito, porque a peça era considerada "já aprovada". <strong>4.</strong> Havia sinais antes do
+      desastre — e nenhum canal que os transformasse em ação.</p>
+      <p>Note que <strong>nenhum desses quatro itens é uma linha de código</strong>. Todos são
+      decisões de processo.</p>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════ 4. ANATOMIA DE UM FRACASSO ═══════════════ -->
+  <section class="step-section" id="anatomia">
+    <div class="step-header">
+      <div class="step-number sn-red">🧨</div>
+      <div>
+        <div class="step-title">Anatomia de um fracasso</div>
+        <div class="step-sub">Desmontando a cadeia, elo por elo</div>
+      </div>
+    </div>
+
+    <p style="font-size:0.95rem;color:var(--text-dim);margin-bottom:4px">
+      Ler o caso inteiro dá a impressão de tragédia inevitável. Não é. Todo desastre de software
+      atravessa os mesmos cinco pontos de controle, e em cada um deles alguém poderia ter puxado o
+      freio. A simulação abaixo mostra <strong style="color:var(--text)">onde o erro nasceu</strong>,
+      <strong style="color:var(--text)">onde ele passou batido</strong> e
+      <strong style="color:var(--text)">onde virou notícia</strong>.
+    </p>
+
+<!-- ================= SIMULADOR: Anatomia de um fracasso ================= -->
+<div class="sim" id="sim-anatomia">
+  <div class="sim-head">
+    <span class="sim-ic">🧨</span>
+    <h4>Anatomia de um fracasso</h4>
+    <span class="sim-tag">estudo de caso</span>
+  </div>
+  <p class="sim-hint">
+    Escolha um desastre real de software. A simulação percorre os <strong>cinco estágios do processo</strong>
+    e marca, em cada um, se o erro nasceu ali, se apenas passou batido, ou se ali estava tudo bem.
+  </p>
+  <div class="sim-body">
+
+    <div class="sim-chips" id="anat-chips" role="group" aria-label="Escolha o caso">
+      <button type="button" class="sim-chip on" data-caso="ariane" aria-pressed="true">Ariane 5</button>
+      <button type="button" class="sim-chip" data-caso="therac" aria-pressed="false">Therac-25</button>
+      <button type="button" class="sim-chip" data-caso="knight" aria-pressed="false">Knight Capital</button>
+    </div>
+
+    <div class="anat-caso">
+      <div class="anat-caso-nome" id="anat-nome">&nbsp;</div>
+      <p class="anat-caso-linha" id="anat-linha">&nbsp;</p>
+      <div class="anat-caso-custo" id="anat-custo">&nbsp;</div>
+    </div>
+
+    <ol class="anat-cadeia" id="anat-cadeia" aria-hidden="true">
+      <li class="anat-elo" data-st=""><span class="anat-elo-ic">○</span><span class="anat-elo-nome">REQUISITO</span><span class="anat-elo-num">1</span></li>
+      <li class="anat-elo" data-st=""><span class="anat-elo-ic">○</span><span class="anat-elo-nome">PROJETO</span><span class="anat-elo-num">2</span></li>
+      <li class="anat-elo" data-st=""><span class="anat-elo-ic">○</span><span class="anat-elo-nome">CÓDIGO</span><span class="anat-elo-num">3</span></li>
+      <li class="anat-elo" data-st=""><span class="anat-elo-ic">○</span><span class="anat-elo-nome">TESTE</span><span class="anat-elo-num">4</span></li>
+      <li class="anat-elo" data-st=""><span class="anat-elo-ic">○</span><span class="anat-elo-nome">OPERAÇÃO</span><span class="anat-elo-num">5</span></li>
+    </ol>
+
+    <div class="anat-fases" id="anat-fases" aria-live="polite"></div>
+
+    <div class="sim-out anat-log" id="anat-log" aria-hidden="true"></div>
+
+    <div class="anat-veredito" id="anat-veredito" hidden>
+      <div class="anat-vd-num" id="anat-vd-num">0</div>
+      <div class="anat-vd-txt">
+        <p>
+          <strong id="anat-vd-lead">pontos</strong> em que esta cadeia podia ter sido cortada — antes de virar notícia.
+          <span class="anat-vd-frase">"O bug foi o último elo. Não foi o primeiro."</span>
+          <span class="anat-vd-moral" id="anat-vd-moral"></span>
+        </p>
+      </div>
+    </div>
+
+    <div class="sim-actions">
+      <button type="button" class="sim-btn" id="anat-run">Rodar de novo</button>
+      <button type="button" class="sim-btn ghost" id="anat-skip">Mostrar tudo de uma vez</button>
+    </div>
+  </div>
+</div>
+<!-- =============== FIM: Anatomia de um fracasso =============== -->
+
+    <div class="warning">
+      <div class="warning-icon">⚠️</div>
+      <div class="warning-content">
+        <strong>Repare no caso da Knight Capital:</strong> o primeiro estágio fica branco. O
+        requisito estava perfeito, o pedido do negócio era claro e o código novo funcionava. Ainda
+        assim a empresa quase desapareceu. Isso derruba a conclusão preguiçosa de que "basta escrever
+        bem o requisito" — desastre não precisa de requisito ruim, precisa só de processo frouxo.
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════ 5. O QUE A ENGENHARIA BUSCA ═══════════════ -->
+  <section class="step-section" id="o-que-busca">
+    <div class="step-header">
+      <div class="step-number sn-yellow">🎯</div>
+      <div>
+        <div class="step-title">O que a engenharia busca</div>
+        <div class="step-sub">Spoiler: não é a solução perfeita</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <p>Uma leitura ingênua dos desastres acima é: "então é só fazer tudo direito". Mas
+      <em>tudo direito</em> custa prazo e dinheiro que ninguém tem infinitos. O Therac-25 tinha
+      concorrentes; o Ariane 5 tinha janela de lançamento; a Knight tinha uma data de bolsa.</p>
+      <p>Engenharia não é achar a solução perfeita. É <strong>decidir conscientemente</strong> o que
+      você vai sacrificar — e conseguir explicar essa decisão depois, para alguém que não estava na
+      sala.</p>
+    </div>
+
+    <div class="blueprint" data-legenda="triângulo de restrições">
+      <svg viewBox="0 0 520 310" role="img" aria-label="Triângulo de restrições: prazo, custo e escopo puxando a qualidade no centro">
+        <path class="draw" style="--len:1000" d="M260 45 L 455 250 L 65 250 Z"
+              fill="none" stroke="#38bdf8" stroke-width="2"/>
+
+        <circle class="tri-v on fade" id="tri-prazo"  cx="260" cy="45"  r="9"/>
+        <circle class="tri-v fade"    id="tri-custo"  cx="65"  cy="250" r="9"/>
+        <circle class="tri-v fade"    id="tri-escopo" cx="455" cy="250" r="9"/>
+
+        <text class="blueprint-label tri-lab fade" x="260" y="26"  text-anchor="middle">PRAZO</text>
+        <text class="blueprint-label tri-lab fade" x="65"  y="275" text-anchor="middle">CUSTO</text>
+        <text class="blueprint-label tri-lab fade" x="455" y="275" text-anchor="middle">ESCOPO</text>
+
+        <text class="blueprint-label fade" x="260" y="175" text-anchor="middle" style="font-size:0.95rem">QUALIDADE</text>
+        <text class="blueprint-label fade" x="260" y="197" text-anchor="middle" fill="#8fa0b8">o que sobra quando os três apertam</text>
+      </svg>
+    </div>
+
+    <div class="sim" id="sim-tradeoff">
+      <div class="sim-head">
+        <span class="sim-ic">🎚️</span>
+        <h4>Aperte um lado e veja o que cede</h4>
+        <span class="sim-tag">trade-off</span>
+      </div>
+      <p class="sim-hint">
+        Os quatro puxam uns aos outros. <strong>Não existe apertar um sem soltar outro</strong> —
+        existe apenas fazer isso de propósito ou por acidente.
+      </p>
+      <div class="sim-body">
+        <div class="sim-chips" id="tri-chips" role="group" aria-label="Escolha a restrição">
+          <button type="button" class="sim-chip on" data-lado="prazo"     aria-pressed="true">⏱️ apertar o PRAZO</button>
+          <button type="button" class="sim-chip"    data-lado="custo"     aria-pressed="false">💰 cortar o CUSTO</button>
+          <button type="button" class="sim-chip"    data-lado="escopo"    aria-pressed="false">📦 aumentar o ESCOPO</button>
+          <button type="button" class="sim-chip"    data-lado="qualidade" aria-pressed="false">🎯 exigir QUALIDADE</button>
+        </div>
+
+        <div class="tri-out">
+          <div class="tri-titulo" id="tri-titulo">"A entrega tem que ser nessa data, e ponto."</div>
+          <p class="tri-texto" id="tri-texto">
+            Se a data é inegociável e o time é o mesmo, sobra cortar escopo ou aceitar menos
+            qualidade. As duas coisas vão acontecer — a questão é se por decisão ou por omissão.
+          </p>
+          <ul class="tri-lista" id="tri-lista">
+            <li>Alguém vai decidir o que não entra. Melhor que seja você agora, e não o acaso da última semana.</li>
+            <li>Teste costuma ser o primeiro corte, porque é a única atividade cujo resultado não aparece na tela.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-size:1.15rem;font-weight:900;margin:30px 0 6px">Por que descobrir tarde sai mais caro</h3>
+
+    <div class="concept">
+      <div class="concept-title">O mecanismo (isto é o que importa)</div>
+      <p>Um erro de requisito descoberto na hora de escrever o requisito custa uma conversa. O mesmo
+      erro descoberto em produção já se <strong>propagou</strong>: virou decisão de projeto, virou
+      código, virou caso de teste que testa a coisa errada, virou documentação, virou treinamento de
+      usuário e virou dado gravado no banco.</p>
+      <p>Consertar não é mais editar uma frase — é desfazer uma cascata. Foi literalmente isso que
+      aconteceu no Ariane 5 e no Mars Climate Orbiter: o defeito nasceu na
+      <strong>especificação</strong> (um requisito de trajetória que não entrou no documento; uma
+      unidade de medida especificada e não seguida) e só foi pago anos depois, em voo.</p>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat duvidoso">
+        <div class="stat-num">100x</div>
+        <div class="stat-desc">O multiplicador famoso: corrigir um defeito em produção custaria até
+        cem vezes mais do que corrigi-lo na fase de requisitos.</div>
+        <div class="stat-fonte">⚠️ Folclore, não ciência. A origem foi rastreada até notas de um
+        programa <em>interno de treinamento</em> da IBM, não de um instituto de pesquisa, e os dados
+        de apoio não são públicos. Um estudo de 2016 com 171 projetos não encontrou diferença
+        significativa entre fases. Ensine a direção do efeito, nunca o número.</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">US$ 59,5 bi</div>
+        <div class="stat-desc">Estimativa do custo anual dos defeitos de software para a economia dos
+        EUA, dos quais US$ 22,2 bi seriam evitáveis com melhor infraestrutura de teste.</div>
+        <div class="stat-fonte">NIST/RTI, Tassey, 2002. Ressalva obrigatória: tem mais de vinte anos
+        e a estimativa nacional foi extrapolada de pesquisas em apenas dois agrupamentos setoriais.
+        É o número mais completo do gênero, mas é extrapolação, não medição.</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">16 / 53 / 31</div>
+        <div class="stat-desc">Percentuais do primeiro CHAOS Report (1994): projetos bem-sucedidos,
+        "problemáticos" (entregues acima do prazo e do orçamento, com menos funcionalidades) e
+        cancelados.</div>
+        <div class="stat-fonte">Standish Group. Ressalva: ali "sucesso" significa apenas aderência à
+        estimativa inicial de custo, prazo e quantidade de funcionalidades — não utilidade, nem
+        lucro, nem satisfação de quem usa.</div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <div class="tip-icon">🔍</div>
+      <div class="tip-content">
+        <strong>Quem define a métrica define o resultado.</strong> Eveleens e Verhoef (IEEE Software,
+        2010) aplicaram a definição de "sucesso" do CHAOS a 5.457 previsões reais e mostraram que uma
+        organização com estimativas comprovadamente não enviesadas ainda marcaria só 35% de sucesso
+        por aquele critério. Pior: ao adotar a definição, os gerentes passaram a inflar orçamentos
+        para caber nela, e a qualidade das previsões piorou.<br><br>
+        Guarde os dois usos disso. Primeiro: <strong>a definição de "projeto bem-sucedido" é ela
+        própria um requisito</strong> — se for mal escrita, toda a medição perde sentido.
+        Segundo: em Engenharia de Software muitos números famosos sobrevivem por repetição, não por
+        evidência. Aprender a perguntar "qual é a fonte primária?" vale mais que decorar qualquer um
+        deles.
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════ 6. MITO × REALIDADE ═══════════════ -->
+  <section class="step-section" id="mito">
+    <div class="step-header">
+      <div class="step-number sn-red">🎭</div>
+      <div>
+        <div class="step-title">Mito × Realidade</div>
+        <div class="step-sub">Um por capítulo — e este é o mais teimoso de todos</div>
+      </div>
+    </div>
+
+    <div class="mito-real">
+      <div class="mr-mito">
+        <span class="mr-carimbo">MITO</span>
+        <p>"Engenharia de Software é papelada. Quem sabe programar de verdade não precisa disso."</p>
+      </div>
+      <div class="mr-real">
+        <span class="mr-tag">NA REAL</span>
+        <p>Nenhum dos cinco desastres deste capítulo foi causado por alguém que não sabia programar.
+        Os engenheiros do Ariane 5 escreviam software de voo em Ada. Os da Knight mexiam num sistema
+        que roteava bilhões de dólares por dia. O programador do Therac-25 escrevia em assembly, com
+        um executivo de tarefas próprio.</p>
+        <p>O que faltou não foi habilidade técnica. Faltou alguém com a
+        <strong>obrigação</strong> de perguntar: essa premissa ainda vale no contexto novo? quem mais
+        lê essa chave de configuração? alguém já testou o sistema inteiro junto, e não só as peças?
+        esses 97 e-mails de erro têm dono?</p>
+        <p>Papelada é o que sobra quando o processo vira ritual sem propósito — e isso existe, é
+        ruim, e você vai encontrar. Engenharia de Software é o contrário: o
+        <strong>conjunto mínimo de perguntas e barreiras</strong> que impede a sua boa ideia de virar
+        manchete. Quanto maior o time e mais longa a vida do sistema, mais barata essa disciplina
+        fica em relação ao que ela evita.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════ 7. E A IA NISSO? ═══════════════ -->
+  <section class="step-section" id="ia">
+    <div class="step-header">
+      <div class="step-number sn-purple">🤖</div>
+      <div>
+        <div class="step-title">E a IA nisso?</div>
+        <div class="step-sub">A provocação de sempre, sem resposta pronta</div>
+      </div>
+    </div>
+
+    <div class="ia-box">
+      <div class="ia-title"><span class="ia-emoji">🤖</span> Se a IA escreve o código, a engenharia importa menos?</div>
+      <p>Vamos ser honestos sobre o que muda. Se uma ferramenta escreve boa parte do código, a
+      atividade "escrever código" fica mais barata. Isso é real e já está acontecendo com você.</p>
+      <p>Agora repare no que <strong>não fica mais barato</strong>: decidir o que construir, garantir
+      que o que foi construído está certo, e manter aquilo vivo quando o contexto mudar.</p>
+      <p>Olhe a lista deste capítulo de novo. Ariane 5: uma premissa que nunca foi escrita em lugar
+      nenhum. Mars Climate Orbiter: uma especificação que existia e que ninguém conferiu. Knight
+      Capital: uma chave de configuração reaproveitada e uma implantação sem segunda revisão. C&amp;M:
+      um acesso legítimo sem segundo par de olhos. <strong>Nenhum desses problemas é "faltou alguém
+      que soubesse digitar o código"</strong> — são problemas de especificação, de verificação e de
+      operação, exatamente a parte que nenhuma ferramenta assume por você.</p>
+      <p>Tem um detalhe incômodo, aliás: gerar código dez vezes mais rápido também gera
+      <strong>premissas não escritas</strong> dez vezes mais rápido. Código que ninguém precisou
+      pensar para produzir é código que ninguém precisou entender para aceitar.</p>
+      <p>Fica a pergunta para a turma, e ela não tem resposta pronta:
+      <strong>se produzir código ficou muito mais barato, o que acontece com o custo de descobrir
+      que o código produzido resolvia o problema errado?</strong></p>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════ 8. DINÂMICA EM SALA ═══════════════ -->
+  <section class="step-section" id="dinamica">
+    <div class="step-header">
+      <div class="step-number sn-etica">🎲</div>
+      <div>
+        <div class="step-title">Dinâmica em sala</div>
+        <div class="step-sub">Roteiro para conduzir a atividade presencial</div>
+      </div>
+    </div>
+
+    <div class="dinamica">
+      <div class="din-head">
+        <span class="din-ic">🎲</span>
+        <h4>O app que me deixou na mão</h4>
+        <div class="din-meta">
+          <span>⏱️ 20 a 25 min</span>
+          <span>👥 turma toda, em plenária</span>
+          <span>🧰 quadro dividido em 2 colunas</span>
+        </div>
+      </div>
+      <div class="din-body">
+        <p>O objetivo não é reclamar de aplicativo. É a turma descobrir sozinha que a maioria das
+        falhas que ela vive <strong>não é falha de código</strong> — é falha de entendimento.</p>
+        <ol>
+          <li><strong>(3 min) Pensar em silêncio.</strong> Peça que cada aluno lembre de um caso
+          real: um app, site ou sistema que falhou <em>com ele</em>. Regra única: tem que ter
+          acontecido com a pessoa, não pode ser história que ela leu na internet.</li>
+
+          <li><strong>(8 min) Colher os relatos.</strong> Chame 6 a 8 alunos, um minuto cada — corte
+          gentilmente quem passar disso. No quadro anote só o apelido do caso ("a matrícula que
+          sumiu", "o boleto que venceu antes"), nunca a história inteira.</li>
+
+          <li><strong>(7 min) Classificar.</strong> Divida o quadro em duas colunas:
+          <br><em>FALHA TÉCNICA</em> = o sistema quebrou, deu erro, caiu, travou.
+          <br><em>FALHA DE ENTENDIMENTO</em> = o sistema funcionou exatamente como foi construído,
+          só que foi construído para o problema errado, ou não previu a situação real.
+          <br>Vá caso a caso e pergunte à turma em qual coluna entra. Deixe discutirem os
+          ambíguos — a discussão <strong>é</strong> o conteúdo da aula, não uma perda de tempo.</li>
+
+          <li><strong>(5 min) Contar em voz alta.</strong> Some as duas colunas. Na maioria das
+          turmas a de ENTENDIMENTO fica maior. Aí faça as duas perguntas de fecho, nesta ordem:
+          "quantos desses seriam resolvidos por um programador melhor?" e depois "quantos seriam
+          resolvidos por alguém que tivesse perguntado a coisa certa antes de começar?".</li>
+
+          <li><strong>(2 min) Amarrar.</strong> Volte aos cinco desastres do capítulo. Diga a frase
+          que fecha a aula: a diferença entre o caso do aluno e o Therac-25 é
+          <strong>a escala, não a estrutura</strong>. A anatomia da falha é a mesma.</li>
+        </ol>
+
+        <div class="din-nota">
+          <strong>Dicas de condução.</strong> (1) Se a turma jogar tudo em FALHA TÉCNICA, use a
+          pergunta de virada: <em>"o sistema fez o que foi programado para fazer?"</em>. Quase sempre
+          a resposta é sim — e aí o caso migra de coluna sozinho, sem você corrigir ninguém.
+          (2) Não conserte a classificação da turma; deixe que ela se corrija com perguntas. O aluno
+          defende o que ele mesmo concluiu.
+          (3) Anote 2 ou 3 casos no seu caderno: eles voltam como exemplo pronto quando chegarmos aos
+          capítulos de requisitos.
+          (4) Se a turma for muito pequena ou muito calada, peça 2 casos por pessoa e faça em duplas
+          antes da plenária.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════ 9. RESUMO ═══════════════ -->
+  <section class="step-section" id="resumo">
+    <div class="step-header">
+      <div class="step-number sn-mint">✅</div>
+      <div>
+        <div class="step-title">O que ficou</div>
+        <div class="step-sub">Cinco frases para levar deste capítulo</div>
+      </div>
+    </div>
+
+    <ul class="checklist">
+      <li><strong>Engenharia de Software cuida de todos os aspectos da produção de software</strong>
+      — do início da especificação até a manutenção, depois que o sistema já está em operação. Código
+      é uma parte, não o todo.</li>
+
+      <li><strong>Programa funciona na sua máquina; produto de software funciona na máquina dos
+      outros</strong> — de gente que você não conhece, por anos, provavelmente com outra pessoa
+      mantendo.</li>
+
+      <li><strong>A engenharia aparece quando entram outras pessoas e tempo.</strong> Sozinho e por
+      uma tarde, quase nada disso se paga. Com cinco pessoas e cinco anos, é a única coisa que segura
+      o sistema em pé.</li>
+
+      <li><strong>Desastre de software quase nunca é "um bug".</strong> É uma cadeia que atravessou
+      requisito, projeto, código, teste e operação sem ser barrada em nenhum ponto. O bug foi o
+      último elo.</li>
+
+      <li><strong>Reusar software é reusar as premissas dele.</strong> Se o contexto mudou,
+      componente "já testado" é componente novo — e precisa ser tratado como tal.</li>
+
+      <li><strong>Engenharia é escolher trade-offs de propósito</strong> entre prazo, custo, escopo e
+      qualidade — e desconfiar de número famoso que ninguém sabe de onde veio.</li>
+    </ul>
+
+    <div class="gancho">
+      <h4>Antes do próximo capítulo, uma pergunta incômoda</h4>
+      <p>Em todos os casos que você leu, alguém <em>decidiu</em>. Alguém decidiu remover as travas
+      mecânicas do Therac-25. Alguém decidiu deixar três variáveis desprotegidas no Ariane 5 para
+      respeitar uma meta de carga de processador. Alguém decidiu que 7 de 8 servidores era perto o
+      bastante. Alguém decidiu vender a própria credencial por R$ 5 mil.</p>
+      <p>Quando o software erra e alguém se machuca, ou perde dinheiro, ou perde um direito —
+      <strong>quem responde?</strong> A empresa? O gerente que apertou o prazo? O engenheiro que
+      assinou o projeto? O programador que escreveu a linha? E o que você faz quando recebe a ordem
+      de entregar algo que sabe que não está pronto?</p>
+      <p>É esse o assunto do <strong>Capítulo 02: Ética do engenheiro de software</strong>.</p>
+    </div>
+
+    <div class="cap-nav">
+      <a class="nav-voltar" href="../../">← voltar ao hub</a>
+      <a class="nav-proximo" href="../02-etica-do-engenheiro/">Próximo: Cap 02 — Ética do engenheiro 🚀 »</a>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>
+    <strong>Engenharia de Software</strong> — Sistemas para Internet · Centro Universitário UNIESP
+  </p>
+  <p style="margin-top:6px">
+    Profa. <strong style="color:var(--blueprint)">Priscilla Praxedes</strong>
+  </p>
+  <p style="margin-top:10px">
+    <a href="../../">Voltar ao hub da disciplina</a>
+  </p>
+  <p style="margin-top:10px;font-size:0.78rem">
+    Cap 01 · O mundo movido a software — feito com <span class="heart">♥</span> para quem vai
+    construir software de verdade.
+  </p>
+</footer>
+
+<script src="../../shared/scripts.js" defer></script>
+<script type="module" src="../../shared/motion-fx.js"></script>
+
+<script>
+/* =========================================================
+   REDE DE SEGURANÇA DA LINHA DO TEMPO
+   O initTimelines() do shared observa o .timeline INTEIRO com
+   threshold 0.15. Os casos deste capítulo são longos: no celular
+   a linha passa de 7.000px, então a razão de interseção máxima
+   fica em ~0.11 e o observador NUNCA dispara — os cinco casos
+   ficariam invisíveis (opacity:0) para sempre.
+   Aqui cada item é observado individualmente. Somar .on duas
+   vezes é inofensivo, então isto convive com o shared.
+   ========================================================= */
+(function(){
+  'use strict';
+  var itens = document.querySelectorAll('.timeline .tl-item');
+  if (!itens.length) return;
+  if (typeof window.onView !== 'function'){
+    for (var i=0;i<itens.length;i++) itens[i].classList.add('on');
+    return;
+  }
+  Array.prototype.forEach.call(itens, function(item){
+    window.onView(item, function(){ item.classList.add('on'); },
+                  {threshold:0.02, rootMargin:'0px 0px -30px 0px'});
+  });
+})();
+
+/* =========================================================
+   SIMULADOR: Anatomia de um fracasso
+   ========================================================= */
+(function(){
+  'use strict';
+  var raiz = document.getElementById('sim-anatomia');
+  if (!raiz) return;
+
+  var ETAPAS = ['REQUISITO','PROJETO','CÓDIGO','TESTE','OPERAÇÃO'];
+
+  var ESTILO = {
+    intro: {ic:'🔴', rot:'O ERRO NASCE AQUI',    log:'erro introduzido aqui',        cls:'bad'},
+    miss:  {ic:'🟡', rot:'PASSOU DESPERCEBIDO',  log:'passou batido — dava pra pegar',cls:'warn'},
+    ok:    {ic:'⚪', rot:'NADA DE ERRADO AQUI',  log:'sem problema neste estágio',    cls:'muted'},
+    boom:  {ic:'💥', rot:'AQUI VIRA DESASTRE',   log:'DESASTRE',                      cls:'bad'}
+  };
+
+  var CASOS = {
+    ariane: {
+      nome:'Ariane 5 — voo 501',
+      linha:'Um foguete europeu se despedaça 39 segundos depois de decolar. O software funcionava perfeitamente — para outro foguete.',
+      custo:'cerca de US$ 370 milhões · 4 satélites perdidos · sem vítimas',
+      moral:'Reusar código é reusar as premissas dele. Se o contexto mudou, código "já testado" é código novo.',
+      fases:[
+        {st:'intro',
+         fato:'O software de navegação do Ariane 4 foi reaproveitado inteiro, porque "já tinha voado dezenas de vezes". Dentro dele havia uma premissa nunca escrita no papel: a de que a velocidade horizontal nunca passa de certo valor. O Ariane 5 subia por uma trajetória diferente, e passava.',
+         barreira:'Tratar componente reusado como requisito NOVO: listar e revalidar cada premissa no contexto de destino.'},
+        {st:'miss',
+         fato:'Para economizar processador, o projeto decidiu deixar parte das conversões numéricas sem proteção contra estouro. O argumento foi "fisicamente esse valor não acontece". E o computador reserva rodava exatamente o mesmo software — redundância que não protege contra erro de projeto.',
+         barreira:'Revisão de projeto que pergunte "e se a premissa física estiver errada?" — e redundância que não seja cópia idêntica.'},
+        {st:'miss',
+         fato:'Um número real de 64 bits era convertido para um inteiro de 16 bits sem verificar se cabia. Pior: esse trecho fazia parte de uma rotina de alinhamento que só tinha utilidade antes da decolagem no Ariane 4 — e continuava rodando em pleno voo, sem servir para nada.',
+         barreira:'Revisão de código e análise estática caçando conversão sem faixa verificada e código morto ainda ativo.'},
+        {st:'miss',
+         fato:'O sistema inercial entrou na integração como peça "já aprovada". Nenhum teste alimentou o software com a trajetória real do Ariane 5 — justamente o dado que quebrava a premissa. Testou-se o foguete novo com o perfil de voo do foguete velho.',
+         barreira:'Teste de integração com os dados reais do novo produto, não com o cenário herdado do produto anterior.'},
+        {st:'boom',
+         fato:'Aos 37 segundos de voo, os dois computadores inerciais se desligaram. O computador de bordo leu o código de diagnóstico como se fosse dado de voo e comandou deflexão máxima dos bicos; aos 39 segundos o foguete se partiu no ar.',
+         barreira:null}
+      ]
+    },
+
+    therac: {
+      nome:'Therac-25',
+      linha:'Uma máquina de radioterapia entrega doses centenas de vezes maiores que a prescrita — e por meses ninguém acredita que a culpa seja do software.',
+      custo:'6 acidentes conhecidos · pelo menos 3 mortes',
+      moral:'Quando se remove uma barreira física, alguém precisa assumir, por escrito, que o software virou a única proteção.',
+      fases:[
+        {st:'intro',
+         fato:'A análise de segurança da máquina partiu de uma premissa: software não falha. Os cálculos de risco deram probabilidade desprezível a erro de programa, e o código foi considerado confiável porque vinha de modelos anteriores "que nunca deram problema".',
+         barreira:'Análise de risco que inclua falha de software como evento possível — e que não trate histórico de uso como prova de correção.'},
+        {st:'miss',
+         fato:'As travas mecânicas foram retiradas do projeto. Nos modelos anteriores, elas impediam fisicamente o feixe de alta energia de sair sem o filtro na frente. O mesmo defeito de software já existia lá — só que a trava queimava um fusível e a máquina simplesmente parava. Sem a trava, o mesmo software virou letal.',
+         barreira:'Regra de projeto: função crítica de segurança não pode depender de uma barreira só — muito menos de uma barreira só de software.'},
+        {st:'miss',
+         fato:'Havia uma condição de corrida: se o operador digitasse a prescrição e corrigisse muito rápido, a máquina era configurada num modo e disparava noutro. O código inteiro era de um único programador, sem revisão independente, e vinha sendo copiado de máquina para máquina havia anos.',
+         barreira:'Revisão de código independente quando o software pode machucar alguém. Concorrência é exatamente onde o teste sozinho não alcança.'},
+        {st:'miss',
+         fato:'O conjunto máquina + software quase não foi testado junto antes de ir para os hospitais. A sequência que causava o acidente exigia digitação rápida — coisa que só um operador experiente faz depois de meses de uso, e que nenhum roteiro de teste reproduzia.',
+         barreira:'Testar com usuários reais no ritmo real de trabalho, e não só o caminho feliz descrito no manual. E, depois do primeiro relato, levar a sério quem opera a máquina: o incidente inicial era a chance de evitar todos os seguintes.'},
+        {st:'boom',
+         fato:'Pacientes receberam doses de radiação centenas de vezes maiores que a prescrita. Durante meses, cada relato foi respondido com "é impossível, a máquina não faz isso": não havia registro de erro utilizável, e a tela mostrava só um código sem explicação, do tipo que os operadores já tinham aprendido a ignorar.',
+         barreira:null}
+      ]
+    },
+
+    knight: {
+      nome:'Knight Capital',
+      linha:'Uma corretora de Wall Street perde meio bilhão de dólares em 45 minutos por causa de um arquivo que não foi copiado para um servidor.',
+      custo:'cerca de US$ 460 milhões em 45 minutos · a empresa não sobreviveu sozinha',
+      moral:'O requisito estava certo e o código novo estava certo. O que faltou foi processo de entrega — e é assim que a maioria dos desastres modernos acontece.',
+      fases:[
+        {st:'ok',
+         fato:'O pedido do negócio era legítimo e claro: adaptar o sistema para um novo programa de negociação da bolsa, com prazo definido e escopo pequeno. Não há nada de errado aqui — e é justamente esse o ponto: desastre não precisa de requisito ruim.',
+         barreira:null},
+        {st:'intro',
+         fato:'Para ligar a funcionalidade nova, a equipe reaproveitou uma chave de configuração que já era usada por uma rotina antiga, desativada havia anos e nunca removida do sistema. A partir dali, ligar a chave passou a ligar duas coisas ao mesmo tempo.',
+         barreira:'Nunca reciclar identificador de configuração. Código que "não é mais usado" deve ser apagado, não desligado por parâmetro.'},
+        {st:'miss',
+         fato:'A rotina antiga continuava no sistema, inteira e alcançável. Ela não tinha o controle que impedia repetir ordens indefinidamente — esse controle havia sido movido para outro ponto do sistema anos antes, e ninguém notou que a rotina velha tinha ficado sem ele.',
+         barreira:'Apagar código morto de verdade. E, na revisão, perguntar sempre: quem mais lê essa chave de configuração?'},
+        {st:'miss',
+         fato:'Ninguém testou o que acontece se um servidor do grupo ficar com a versão antiga enquanto os outros já rodam a nova. Também não havia teste que exercitasse a chave ligada com a rotina velha ainda presente.',
+         barreira:'Testar a mistura de versões. O estado intermediário de uma implantação também é um estado do sistema.'},
+        {st:'boom',
+         fato:'A implantação era manual, servidor por servidor: dos 8 servidores, 7 receberam o código novo e 1 ficou para trás. Na abertura do pregão, esse servidor começou a comprar e vender em looping. Alertas por e-mail chegaram, mas ninguém era responsável por eles. Sem entender a causa, a equipe desfez a mudança nos outros servidores — e espalhou o problema para todos.',
+         barreira:'Implantação automatizada e verificada, alerta com dono, e um botão de desligar que não dependa de descobrir a causa antes.'}
+      ]
+    }
+  };
+
+  // ---- elementos ----
+  var elChips  = document.getElementById('anat-chips');
+  var elNome   = document.getElementById('anat-nome');
+  var elLinha  = document.getElementById('anat-linha');
+  var elCusto  = document.getElementById('anat-custo');
+  var elCadeia = document.getElementById('anat-cadeia');
+  var elFases  = document.getElementById('anat-fases');
+  var elLog    = document.getElementById('anat-log');
+  var elVer    = document.getElementById('anat-veredito');
+  var elVerNum = document.getElementById('anat-vd-num');
+  var elVerLead= document.getElementById('anat-vd-lead');
+  var elMoral  = document.getElementById('anat-vd-moral');
+  var btnRun   = document.getElementById('anat-run');
+  var btnSkip  = document.getElementById('anat-skip');
+  var elos     = Array.prototype.slice.call(elCadeia.querySelectorAll('.anat-elo'));
+
+  var atual   = 'ariane';
+  var timers  = [];
+  var direto  = false;   // "mostrar tudo": pula a espera entre estágios
+  var semAnim = false;
+  try { semAnim = window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+
+  function limpar(){
+    for (var i=0;i<timers.length;i++) clearTimeout(timers[i]);
+    timers = [];
+  }
+  function agenda(fn, ms){
+    if (semAnim || direto) { fn(); return; }
+    timers.push(setTimeout(fn, ms));
+  }
+  function span(cls, txt){
+    var s = document.createElement('span');
+    if (cls) s.className = cls;
+    s.textContent = txt;
+    return s;
+  }
+  /* Liga a classe .on depois de forçar um reflow — mais confiável que
+     requestAnimationFrame (que não dispara com a aba em segundo plano). */
+  function acender(el){
+    void el.offsetWidth;
+    el.classList.add('on');
+  }
+
+  // ---- monta uma fase (sem innerHTML) ----
+  function criarFase(i, fase){
+    var e = ESTILO[fase.st];
+    var box = document.createElement('div');
+    box.className = 'anat-fase';
+    box.setAttribute('data-st', fase.st);
+
+    var top = document.createElement('div');
+    top.className = 'anat-fase-top';
+    top.appendChild(span('anat-fase-ic', e.ic));
+    top.appendChild(span('anat-etapa', (i+1) + '. ' + ETAPAS[i]));
+    top.appendChild(span('anat-st', e.rot));
+    box.appendChild(top);
+
+    var p = document.createElement('p');
+    p.className = 'anat-fato';
+    p.textContent = fase.fato;
+    box.appendChild(p);
+
+    if (fase.barreira){
+      var b = document.createElement('p');
+      b.className = 'anat-barreira';
+      var forte = document.createElement('strong');
+      forte.textContent = 'Dava pra pegar aqui: ';
+      b.appendChild(forte);
+      b.appendChild(document.createTextNode(fase.barreira));
+      box.appendChild(b);
+    }
+    return box;
+  }
+
+  // ---- linha do console ----
+  function logLinha(esq, dir, cls, cheia){
+    var ln = document.createElement('div');
+    ln.className = 'ln' + (cheia ? ' full' : '');
+    if (cheia){
+      ln.appendChild(span(cls, esq));
+    } else {
+      ln.appendChild(span('muted', esq));
+      ln.appendChild(span(cls, dir));
+    }
+    elLog.appendChild(ln);
+    acender(ln);
+    return ln;
+  }
+
+  function zerar(){
+    limpar();
+    elFases.textContent = '';
+    elLog.textContent = '';
+    elVer.hidden = true;
+    elVer.classList.remove('on');
+    for (var i=0;i<elos.length;i++){
+      elos[i].classList.remove('on');
+      elos[i].setAttribute('data-st','');
+      elos[i].querySelector('.anat-elo-ic').textContent = '○';
+    }
+  }
+
+  function revelar(i, caso){
+    var fase = caso.fases[i];
+    var e = ESTILO[fase.st];
+
+    var elo = elos[i];
+    elo.setAttribute('data-st', fase.st);
+    elo.querySelector('.anat-elo-ic').textContent = e.ic;
+    elo.classList.add('on');
+
+    var box = criarFase(i, fase);
+    elFases.appendChild(box);
+    acender(box);
+
+    logLinha('[' + (i+1) + '/5] ' + ETAPAS[i], e.log, e.cls, false);
+  }
+
+  function fechar(caso){
+    var pegaveis = 0;
+    for (var i=0;i<caso.fases.length;i++) if (caso.fases[i].barreira) pegaveis++;
+
+    logLinha(' ', '', 'muted', true);
+    logLinha('>> ' + pegaveis + ' de 5 estágios tinham como interromper a cadeia', '', 'warn', true);
+    logLinha('>> barreiras que de fato funcionaram: 0', '', 'bad', true);
+
+    elVerNum.textContent = String(pegaveis);
+    elVerLead.textContent = pegaveis === 1 ? 'ponto' : 'pontos';
+    elMoral.textContent = caso.moral;
+    elVer.hidden = false;
+    acender(elVer);
+  }
+
+  function rodar(instantaneo){
+    var caso = CASOS[atual];
+    if (!caso) return;
+    zerar();
+    direto = !!instantaneo;
+
+    elNome.textContent  = caso.nome;
+    elLinha.textContent = caso.linha;
+    elCusto.textContent = caso.custo;
+
+    var passo = (direto || semAnim) ? 0 : 1150;
+    logLinha('cadeia do processo:', '', 'muted', true);
+    logLinha('REQUISITO -> PROJETO -> CÓDIGO -> TESTE -> OPERAÇÃO', '', 'muted', true);
+
+    for (var i=0;i<caso.fases.length;i++){
+      (function(k){
+        agenda(function(){ revelar(k, caso); }, 400 + k*passo);
+      })(i);
+    }
+    agenda(function(){ fechar(caso); }, 400 + caso.fases.length*passo + 250);
+  }
+
+  // ---- interação ----
+  elChips.addEventListener('click', function(ev){
+    var alvo = ev.target.closest ? ev.target.closest('.sim-chip') : null;
+    if (!alvo || !alvo.dataset.caso) return;
+    var chips = elChips.querySelectorAll('.sim-chip');
+    for (var i=0;i<chips.length;i++){
+      var lig = chips[i] === alvo;
+      chips[i].classList.toggle('on', lig);
+      chips[i].setAttribute('aria-pressed', lig ? 'true' : 'false');
+    }
+    atual = alvo.dataset.caso;
+    rodar(false);
+  });
+
+  btnRun.addEventListener('click', function(){ rodar(false); });
+  btnSkip.addEventListener('click', function(){ rodar(true); });
+
+  // ---- 1o disparo automático ----
+  if (typeof window.onView === 'function') window.onView(raiz, function(){ rodar(false); }, {threshold:0.2});
+  else rodar(false);
+})();
+
+/* =========================================================
+   TRIÂNGULO DE RESTRIÇÕES — aperte um lado e veja o que cede
+   Estado inicial já vem renderizado no HTML: sem JS, o widget
+   continua legível (mostra o caso "prazo").
+   ========================================================= */
+(function(){
+  'use strict';
+  var chips = document.getElementById('tri-chips');
+  if (!chips) return;
+
+  var elTitulo = document.getElementById('tri-titulo');
+  var elTexto  = document.getElementById('tri-texto');
+  var elLista  = document.getElementById('tri-lista');
+
+  var VERTICES = {
+    prazo:  'tri-prazo',
+    custo:  'tri-custo',
+    escopo: 'tri-escopo'
+  };
+
+  var LADOS = {
+    prazo: {
+      titulo:'"A entrega tem que ser nessa data, e ponto."',
+      texto:'Se a data é inegociável e o time é o mesmo, sobra cortar escopo ou aceitar menos qualidade. As duas coisas vão acontecer — a questão é se por decisão ou por omissão.',
+      itens:[
+        'Alguém vai decidir o que não entra. Melhor que seja você agora, e não o acaso da última semana.',
+        'Teste costuma ser o primeiro corte, porque é a única atividade cujo resultado não aparece na tela.'
+      ]
+    },
+    custo: {
+      titulo:'"Dá para fazer com metade do time?"',
+      texto:'Menos gente, ou gente menos experiente, significa menos horas produtivas por mês. O trabalho não desaparece: ele reaparece depois, como atraso, como escopo menor ou como retrabalho.',
+      itens:[
+        'Prazo estica, mesmo que ninguém admita no cronograma oficial.',
+        'Aumenta a chance de decisões tomadas por quem não tem contexto — que é exatamente a origem do caso Mars Climate Orbiter.'
+      ]
+    },
+    escopo: {
+      titulo:'"Só mais essa telinha, é rapidinho."',
+      texto:'Cada item novo consome prazo, custo ou qualidade — os outros três não ficam parados esperando. Por isso "só mais uma funcionalidade" é uma das frases mais caras da profissão.',
+      itens:[
+        'Se prazo e custo estão travados, o que cede é a qualidade — silenciosamente.',
+        'Escopo que cresce sem renegociar o resto não é generosidade com o cliente: é dívida marcada para depois.'
+      ]
+    },
+    qualidade: {
+      titulo:'"Aqui a qualidade não é negociável."',
+      texto:'Em software médico, aviônico, bancário ou de infraestrutura crítica, a qualidade vira a restrição FIXA. Então são prazo, custo e escopo que precisam ceder — e alguém precisa dizer isso em voz alta, para quem decide.',
+      itens:[
+        'Essa é exatamente a conversa que não aconteceu no Therac-25 e no Ariane 5.',
+        'Travar a qualidade sem soltar nenhum dos outros três não é rigor: é fingimento, e a conta chega em operação.'
+      ]
+    }
+  };
+
+  /* "qualidade" mora no CENTRO do triangulo, nao num vertice:
+     quando ela e a restricao fixa, os TRES vertices precisam ceder. */
+  function pintarVertice(lado){
+    var todos = (lado === 'qualidade');
+    for (var k in VERTICES){
+      var c = document.getElementById(VERTICES[k]);
+      if (c) c.classList.toggle('on', todos || k === lado);
+    }
+  }
+
+  function mostrar(lado){
+    var d = LADOS[lado];
+    if (!d) return;
+    elTitulo.textContent = d.titulo;
+    elTexto.textContent  = d.texto;
+    elLista.textContent  = '';
+    for (var i=0;i<d.itens.length;i++){
+      var li = document.createElement('li');
+      li.textContent = d.itens[i];
+      elLista.appendChild(li);
+    }
+    pintarVertice(lado);
+  }
+
+  chips.addEventListener('click', function(ev){
+    var alvo = ev.target.closest ? ev.target.closest('.sim-chip') : null;
+    if (!alvo || !alvo.dataset.lado) return;
+    var todos = chips.querySelectorAll('.sim-chip');
+    for (var i=0;i<todos.length;i++){
+      var lig = todos[i] === alvo;
+      todos[i].classList.toggle('on', lig);
+      todos[i].setAttribute('aria-pressed', lig ? 'true' : 'false');
+    }
+    mostrar(alvo.dataset.lado);
+  });
+})();
+</script>
+
+</body>
+</html>

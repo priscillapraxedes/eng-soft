@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Engenharia de Software · UNIESP</title>
+<meta name="description" content="Material interativo da disciplina Engenharia de Software — Profa. Priscilla Praxedes, UNIESP.">
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&amp;family=JetBrains+Mono:wght@400;600;700&amp;family=Nunito:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared/styles.css">
+<link rel="stylesheet" href="shared/components.css">
+<link rel="stylesheet" href="shared/animations.css">
+<style>
+  /* ===== A PLANTA (showcase do hero) ===== */
+  .planta{
+    margin:10px auto 0;max-width:860px;padding:22px 18px 26px;
+    border-radius:20px;position:relative;
+    border:1px solid rgba(56,189,248,0.28);
+    background:
+      linear-gradient(rgba(56,189,248,0.035) 1px,transparent 1px) 0 0/18px 18px,
+      linear-gradient(90deg,rgba(56,189,248,0.035) 1px,transparent 1px) 0 0/18px 18px,
+      #0b111c;
+    box-shadow:0 18px 60px rgba(0,0,0,0.45);
+  }
+  /* cantos de folha técnica */
+  .planta::before,.planta::after{
+    content:'';position:absolute;width:18px;height:18px;
+    border:2px solid rgba(56,189,248,0.4);
+  }
+  .planta::before{top:10px;left:10px;border-right:0;border-bottom:0;border-radius:4px 0 0 0}
+  .planta::after {bottom:10px;right:10px;border-left:0;border-top:0;border-radius:0 0 4px 0}
+  .planta-selo{
+    position:absolute;top:12px;right:16px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.6rem;letter-spacing:2px;text-transform:uppercase;
+    color:rgba(56,189,248,0.55);
+    font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+  }
+  .planta svg{width:100%;height:auto;display:block;overflow:visible}
+
+  /* traço que se desenha sozinho */
+  .pl-draw{
+    stroke-dasharray:var(--len,600);
+    stroke-dashoffset:var(--len,600);
+    animation:plDraw 1.3s ease forwards;
+  }
+  @keyframes plDraw{to{stroke-dashoffset:0}}
+  .pl-fade{opacity:0;animation:plFade 0.7s ease forwards}
+  @keyframes plFade{to{opacity:1}}
+
+  .pl-nome{
+    font-family:'Nunito',sans-serif;font-size:14px;font-weight:800;
+    fill:#eef2f8;text-anchor:middle;
+  }
+  .pl-cod{
+    font-family:'JetBrains Mono',monospace;font-size:9.5px;font-weight:700;
+    fill:rgba(56,189,248,0.75);text-anchor:middle;letter-spacing:1.5px;
+    font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+  }
+  .pl-nota{
+    font-family:'Caveat',cursive;font-size:19px;fill:#f7b731;
+  }
+  .pl-emoji{font-size:19px;text-anchor:middle}
+
+  @media (max-width:620px){
+    .planta{padding:16px 10px 20px}
+    .pl-nome{font-size:16px}
+    .pl-cod{font-size:11px}
+    .pl-nota{font-size:22px}
+  }
+
+  /* ===== Faixa de unidade ===== */
+  .unidade{
+    display:flex;align-items:center;gap:14px;
+    margin:46px 0 4px;
+  }
+  .unidade .u-num{
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.68rem;font-weight:800;letter-spacing:2px;
+    color:#06121f;background:var(--blueprint);
+    padding:4px 12px;border-radius:20px;flex-shrink:0;
+    font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
+  }
+  .unidade.u2 .u-num{background:var(--accent6)}
+  .unidade h3{font-size:1.3rem;font-weight:900;flex-shrink:0}
+  .unidade .u-linha{
+    flex:1;height:1px;
+    background:linear-gradient(90deg,rgba(56,189,248,0.4),transparent);
+  }
+  .unidade.u2 .u-linha{background:linear-gradient(90deg,rgba(167,139,250,0.4),transparent)}
+  .unidade-sub{color:var(--text-dim);font-size:0.9rem;margin-bottom:6px}
+
+  /* ===== Cartões de diferencial ===== */
+  .dif-grid{
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+    gap:16px;margin-top:20px;
+  }
+  .dif{
+    background:var(--surface2);border:1px solid rgba(255,255,255,0.06);
+    border-radius:16px;padding:20px;
+  }
+  .dif .d-ic{font-size:1.9rem;display:block;margin-bottom:8px}
+  .dif h4{font-size:1rem;font-weight:900;margin-bottom:6px;color:var(--blueprint)}
+  .dif p{font-size:0.86rem;color:var(--text-dim);line-height:1.55}
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-orbs">
+  <div class="orb"></div><div class="orb"></div><div class="orb"></div>
+</div>
+
+<div class="progress-track"><div class="progress-bar"></div></div>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="hero-icons" data-motion="float">📐 🏗️ 🚀</div>
+  <span class="hero-badge">Engenharia de Software · UNIESP</span>
+  <h1>Engenharia de Software</h1>
+  <p style="font-family:'Caveat',cursive;font-size:clamp(1.6rem,4vw,2.4rem);color:var(--blueprint);margin:-6px 0 18px;font-weight:700">
+    A planta vem antes da obra<span style="display:inline-block;margin-left:10px;font-size:0.8em">📐</span>
+  </p>
+  <p class="subtitle">
+    Saber programar é saber levantar uma parede.
+    <strong style="color:var(--text)">Engenharia de Software</strong> é decidir onde a parede vai,
+    se ela aguenta o peso, quanto custa — e o que acontece quando o cliente muda de ideia
+    <em>depois</em> de tudo pronto.
+  </p>
+  <div class="hero-stack">
+    <span class="stack-chip processo"><span aria-hidden="true">🏗️</span>processos</span>
+    <span class="stack-chip agil"><span aria-hidden="true">🔄</span>ágil &amp; Scrum</span>
+    <span class="stack-chip requisito"><span aria-hidden="true">📋</span>requisitos</span>
+    <span class="stack-chip teste"><span aria-hidden="true">🧪</span>qualidade</span>
+    <span class="stack-chip etica"><span aria-hidden="true">⚖️</span>ética</span>
+  </div>
+</section>
+
+<div class="container">
+
+  <!-- ═══════════════ A PLANTA ANIMADA ═══════════════ -->
+  <div class="planta">
+    <span class="planta-selo">ciclo de vida · esc 1:1</span>
+    <svg viewBox="0 0 820 250" role="img" aria-label="Ciclo de vida do software: entender, planejar, construir, validar e evoluir — a evolução volta para o entender.">
+      <!-- linha base do fluxo -->
+      <line class="pl-draw" style="--len:640;animation-delay:0.15s"
+            x1="70" y1="96" x2="750" y2="96"
+            stroke="rgba(56,189,248,0.5)" stroke-width="2" stroke-dasharray="640"/>
+
+      <!-- 5 estações -->
+      <g class="pl-fade" style="animation-delay:0.5s">
+        <circle cx="70"  cy="96" r="27" fill="rgba(56,189,248,0.10)" stroke="var(--blueprint)" stroke-width="2"/>
+        <text class="pl-emoji" x="70" y="103">💡</text>
+        <text class="pl-cod"  x="70" y="146">01</text>
+        <text class="pl-nome" x="70" y="166">Entender</text>
+      </g>
+      <g class="pl-fade" style="animation-delay:0.72s">
+        <circle cx="240" cy="96" r="27" fill="rgba(56,189,248,0.10)" stroke="var(--blueprint)" stroke-width="2"/>
+        <text class="pl-emoji" x="240" y="103">📋</text>
+        <text class="pl-cod"  x="240" y="146">02</text>
+        <text class="pl-nome" x="240" y="166">Planejar</text>
+      </g>
+      <g class="pl-fade" style="animation-delay:0.94s">
+        <circle cx="410" cy="96" r="27" fill="rgba(6,214,160,0.10)" stroke="var(--agil)" stroke-width="2"/>
+        <text class="pl-emoji" x="410" y="103">🔨</text>
+        <text class="pl-cod"  x="410" y="146">03</text>
+        <text class="pl-nome" x="410" y="166">Construir</text>
+      </g>
+      <g class="pl-fade" style="animation-delay:1.16s">
+        <circle cx="580" cy="96" r="27" fill="rgba(255,107,107,0.10)" stroke="var(--teste)" stroke-width="2"/>
+        <text class="pl-emoji" x="580" y="103">🧪</text>
+        <text class="pl-cod"  x="580" y="146">04</text>
+        <text class="pl-nome" x="580" y="166">Validar</text>
+      </g>
+      <g class="pl-fade" style="animation-delay:1.38s">
+        <circle cx="750" cy="96" r="27" fill="rgba(247,183,49,0.10)" stroke="var(--accent5)" stroke-width="2"/>
+        <text class="pl-emoji" x="750" y="103">🔄</text>
+        <text class="pl-cod"  x="750" y="146">05</text>
+        <text class="pl-nome" x="750" y="166">Evoluir</text>
+      </g>
+
+      <!-- a volta: software nunca fica pronto -->
+      <path class="pl-draw" style="--len:1100;animation-delay:1.6s"
+            d="M 750 55 C 750 -8, 70 -8, 70 55"
+            fill="none" stroke="var(--accent5)" stroke-width="2"
+            stroke-dasharray="1100" stroke-linecap="round"/>
+      <polygon class="pl-fade" style="animation-delay:2.6s"
+               points="70,66 64,52 76,52" fill="var(--accent5)"/>
+
+      <!-- anotação manuscrita do engenheiro -->
+      <text class="pl-nota pl-fade" style="animation-delay:2.8s" x="336" y="24">
+        e aí volta tudo de novo...
+      </text>
+      <text class="pl-nota pl-fade" style="animation-delay:3.1s" x="286" y="222" fill="#8fa0b8">
+        (software nunca fica &quot;pronto&quot;)
+      </text>
+    </svg>
+  </div>
+
+  <!-- ═══════════════ BOAS-VINDAS ═══════════════ -->
+  <section class="step-section visible" style="margin-top:34px">
+    <div class="card" style="text-align:center;background:linear-gradient(135deg,rgba(56,189,248,0.08),rgba(6,214,160,0.04));border-color:rgba(56,189,248,0.22)">
+      <h3 style="font-size:1.5rem;color:var(--blueprint);margin-bottom:10px">Bem-vindo(a) à disciplina 👋</h3>
+      <p style="font-size:1.05rem;max-width:720px;margin:0 auto 12px">
+        Você já sabe fazer o computador obedecer. Aqui a pergunta muda:
+        <strong style="color:var(--text)">como um time constrói um software que outras pessoas vão usar,
+        outras pessoas vão manter, e que precisa continuar funcionando daqui a cinco anos?</strong>
+      </p>
+      <p class="text-dim" style="max-width:720px;margin:0 auto">
+        Cada capítulo é uma página com fluxos animados, simuladores e quizzes —
+        feita para você <strong style="color:var(--text)">mexer</strong>, não só ler.
+      </p>
+    </div>
+  </section>
+
+  <!-- ═══════════════ UNIDADE 1 ═══════════════ -->
+  <div class="unidade">
+    <span class="u-num">UNIDADE 1</span>
+    <h3>Como nasce um software</h3>
+    <span class="u-linha"></span>
+  </div>
+  <p class="unidade-sub">Do "por que essa disciplina existe" até um time rodando sprints.</p>
+
+  <div class="hub-grid">
+
+    <a class="hub-card c01" href="capitulos/01-mundo-movido-a-software/">
+      <span class="num">CAP · 01</span>
+      <span class="ic">🌍</span>
+      <span class="title">O mundo movido a software</span>
+      <span class="desc">
+        Foguetes que explodiram, máquinas que mataram, 440 milhões de dólares perdidos em 45 minutos.
+        Nenhum deles foi "só um bug".
+      </span>
+      <span class="pills">
+        <span class="pill">o que é ES</span>
+        <span class="pill">desastres</span>
+        <span class="pill">simulador</span>
+      </span>
+    </a>
+
+    <a class="hub-card c02 em-breve" href="capitulos/02-etica-do-engenheiro/">
+      <span class="num">CAP · 02</span>
+      <span class="ic">⚖️</span>
+      <span class="title">Ética do engenheiro</span>
+      <span class="desc">
+        Quem responde quando o software erra? Código ACM/IEEE, LGPD e dilemas em que
+        toda escolha custa alguma coisa.
+      </span>
+      <span class="pills">
+        <span class="pill">ACM/IEEE</span>
+        <span class="pill">LGPD</span>
+        <span class="pill">dilemas</span>
+      </span>
+    </a>
+
+    <a class="hub-card c03 em-breve" href="capitulos/03-processos-ciclos-de-vida/">
+      <span class="num">CAP · 03</span>
+      <span class="ic">🔁</span>
+      <span class="title">Processos e ciclos de vida</span>
+      <span class="desc">
+        Cascata, prototipação, incremental, espiral. Escolha o modelo para o cenário
+        e veja a consequência da sua escolha.
+      </span>
+      <span class="pills">
+        <span class="pill">cascata</span>
+        <span class="pill">espiral</span>
+        <span class="pill">incremental</span>
+      </span>
+    </a>
+
+    <a class="hub-card c04 em-breve" href="capitulos/04-manifesto-agil/">
+      <span class="num">CAP · 04</span>
+      <span class="ic">📜</span>
+      <span class="title">O Manifesto Ágil</span>
+      <span class="desc">
+        Dezessete pessoas numa estação de esqui em 2001 escreveram quatro frases que
+        mudaram a indústria. E o que elas <em>não</em> disseram.
+      </span>
+      <span class="pills">
+        <span class="pill">4 valores</span>
+        <span class="pill">12 princípios</span>
+        <span class="pill">fake agile</span>
+      </span>
+    </a>
+
+    <a class="hub-card c05 em-breve" href="capitulos/05-scrum-time-backlog/">
+      <span class="num">CAP · 05</span>
+      <span class="ic">👥</span>
+      <span class="title">Scrum: o time e o backlog</span>
+      <span class="desc">
+        PO, Scrum Master e time de desenvolvimento. De quem é cada decisão —
+        e por que o Scrum Master não é o chefe.
+      </span>
+      <span class="pills">
+        <span class="pill">papéis</span>
+        <span class="pill">backlog</span>
+        <span class="pill">prioridade</span>
+      </span>
+    </a>
+
+    <a class="hub-card c06 em-breve" href="capitulos/06-scrum-sprint/">
+      <span class="num">CAP · 06</span>
+      <span class="ic">🏃</span>
+      <span class="title">Scrum: a sprint</span>
+      <span class="desc">
+        Duas semanas comprimidas em um minuto: cartões andando, imprevistos acontecendo
+        e o burndown se desenhando na sua frente.
+      </span>
+      <span class="pills">
+        <span class="pill">eventos</span>
+        <span class="pill">burndown</span>
+        <span class="pill">planning poker</span>
+      </span>
+    </a>
+
+    <a class="hub-card c07 em-breve" href="capitulos/07-kanban-xp/">
+      <span class="num">CAP · 07</span>
+      <span class="ic">📌</span>
+      <span class="title">Kanban e XP</span>
+      <span class="desc">
+        Abra tarefas demais e veja o gargalo entupir na sua frente.
+        Depois entenda por que fazer menos coisas ao mesmo tempo entrega mais.
+      </span>
+      <span class="pills">
+        <span class="pill">limite de WIP</span>
+        <span class="pill">lead time</span>
+        <span class="pill">XP</span>
+      </span>
+    </a>
+
+  </div>
+
+  <!-- ═══════════════ UNIDADE 2 ═══════════════ -->
+  <div class="unidade u2">
+    <span class="u-num">UNIDADE 2</span>
+    <h3>Do papel ao produto</h3>
+    <span class="u-linha"></span>
+  </div>
+  <p class="unidade-sub">Entender o problema, desenhar a solução, provar que funciona e mantê-la viva.</p>
+
+  <div class="hub-grid">
+
+    <a class="hub-card c08 em-breve" href="capitulos/08-requisitos-elicitacao/">
+      <span class="num">CAP · 08</span>
+      <span class="ic">🗣️</span>
+      <span class="title">Requisitos: entender o problema</span>
+      <span class="desc">
+        A falha mais cara não é de código, é de entendimento. Entreviste um cliente
+        que não sabe explicar o que quer.
+      </span>
+      <span class="pills">
+        <span class="pill">elicitação</span>
+        <span class="pill">entrevista</span>
+        <span class="pill">etnografia</span>
+      </span>
+    </a>
+
+    <a class="hub-card c09 em-breve" href="capitulos/09-requisitos-user-stories/">
+      <span class="num">CAP · 09</span>
+      <span class="ic">📝</span>
+      <span class="title">Requisitos: escrever bem</span>
+      <span class="desc">
+        "O sistema deve ser rápido" não é requisito. Monte user stories, critérios de
+        aceitação e cace ambiguidades.
+      </span>
+      <span class="pills">
+        <span class="pill">RF x RNF</span>
+        <span class="pill">user story</span>
+        <span class="pill">ambiguidade</span>
+      </span>
+    </a>
+
+    <a class="hub-card c10 em-breve" href="capitulos/10-modelagem-visual/">
+      <span class="num">CAP · 10</span>
+      <span class="ic">📐</span>
+      <span class="title">Modelagem visual</span>
+      <span class="desc">
+        Casos de uso e diagrama de classes que se desenham sozinhos —
+        mais o jeito de 2020-e-poucos de fazer isso.
+      </span>
+      <span class="pills">
+        <span class="pill">caso de uso</span>
+        <span class="pill">classes</span>
+        <span class="pill">Mermaid</span>
+      </span>
+    </a>
+
+    <a class="hub-card c11 em-breve" href="capitulos/11-viabilidade-mvp/">
+      <span class="num">CAP · 11</span>
+      <span class="ic">💰</span>
+      <span class="title">Viabilidade e MVP</span>
+      <span class="desc">
+        Três propostas na sua mesa, orçamento para uma. Qual você aprova —
+        e o que acontece depois da sua decisão?
+      </span>
+      <span class="pills">
+        <span class="pill">viabilidade</span>
+        <span class="pill">custo x valor</span>
+        <span class="pill">MVP</span>
+      </span>
+    </a>
+
+    <a class="hub-card c12 em-breve" href="capitulos/12-qualidade-testes/">
+      <span class="num">CAP · 12</span>
+      <span class="ic">🧪</span>
+      <span class="title">Qualidade e testes</span>
+      <span class="desc">
+        Testar não prova que o software funciona — prova que <em>ainda</em> não achamos
+        onde ele quebra. Aprenda a procurar direito.
+      </span>
+      <span class="pills">
+        <span class="pill">pirâmide</span>
+        <span class="pill">caixa preta</span>
+        <span class="pill">casos de teste</span>
+      </span>
+    </a>
+
+    <a class="hub-card c13 em-breve" href="capitulos/13-evolucao-divida-tecnica/">
+      <span class="num">CAP · 13</span>
+      <span class="ic">🏚️</span>
+      <span class="title">Evolução e dívida técnica</span>
+      <span class="desc">
+        Cada atalho acelera hoje e cobra juros amanhã. Veja a velocidade do time
+        despencando — e o que a IA muda nessa história.
+      </span>
+      <span class="pills">
+        <span class="pill">manutenção</span>
+        <span class="pill">legado</span>
+        <span class="pill">IA</span>
+      </span>
+    </a>
+
+  </div>
+
+  <!-- ═══════════════ SEMINÁRIOS ═══════════════ -->
+  <div class="unidade" style="margin-top:40px">
+    <span class="u-num" style="background:var(--accent6)">EXTRA</span>
+    <h3>Seminários</h3>
+    <span class="u-linha" style="background:linear-gradient(90deg,rgba(167,139,250,0.4),transparent)"></span>
+  </div>
+
+  <div class="hub-grid">
+    <a class="hub-card csem em-breve" href="seminarios/">
+      <span class="num">GUIA</span>
+      <span class="ic">🎤</span>
+      <span class="title">Guia de seminários</span>
+      <span class="desc">
+        Temas, formato, critérios e rubrica de avaliação para as apresentações em grupo.
+      </span>
+      <span class="pills">
+        <span class="pill">temas</span>
+        <span class="pill">rubrica</span>
+      </span>
+    </a>
+  </div>
+
+  <!-- ═══════════════ DIFERENCIAIS ═══════════════ -->
+  <section class="step-section" style="margin-top:56px">
+    <h2 style="font-size:1.6rem;font-weight:900;text-align:center;margin-bottom:6px">
+      Por que esse material é diferente
+    </h2>
+    <p class="text-dim center" style="max-width:620px;margin:0 auto">
+      Engenharia de Software tem fama de disciplina de slide com bullet point. Aqui não.
+    </p>
+
+    <div class="dif-grid" data-motion="rise">
+      <div class="dif" data-motion-child>
+        <span class="d-ic">🎮</span>
+        <h4>Simuladores, não slides</h4>
+        <p>
+          Você roda uma sprint, entope um quadro Kanban, acumula dívida técnica e vê a
+          velocidade do time cair. Conceito abstrato vira coisa que se mexe.
+        </p>
+      </div>
+      <div class="dif" data-motion-child>
+        <span class="d-ic">💥</span>
+        <h4>Casos reais</h4>
+        <p>
+          Foguete que explodiu por reuso de código sem revalidação, corretora que perdeu
+          uma fortuna por um deploy incompleto. Teoria com cicatriz.
+        </p>
+      </div>
+      <div class="dif" data-motion-child>
+        <span class="d-ic">🎲</span>
+        <h4>Dinâmicas em sala</h4>
+        <p>
+          Cada capítulo traz uma atividade presencial pronta: planning poker, penny game,
+          entrevista com cliente, mesa redonda de dilemas.
+        </p>
+      </div>
+      <div class="dif" data-motion-child>
+        <span class="d-ic">🧨</span>
+        <h4>Mito × Realidade</h4>
+        <p>
+          "Ágil é sem documentação", "cascata morreu", "MVP é produto malfeito".
+          Todo capítulo derruba um mito que você vai ouvir por aí.
+        </p>
+      </div>
+      <div class="dif" data-motion-child>
+        <span class="d-ic">🤖</span>
+        <h4>E a IA nisso?</h4>
+        <p>
+          Em cada tema, o que muda quando a IA entra na jogada — sem promessa mágica
+          e sem fingir que nada mudou.
+        </p>
+      </div>
+      <div class="dif" data-motion-child>
+        <span class="d-ic">📐</span>
+        <h4>Feito para consultar</h4>
+        <p>
+          O material fica no ar depois da aula. Voltar num conceito antes da prova
+          é abrir a página e ver a animação de novo.
+        </p>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer class="footer">
+  <p>
+    <strong>Engenharia de Software</strong> — Sistemas para Internet · Centro Universitário UNIESP
+  </p>
+  <p style="margin-top:6px">
+    Profa. <strong style="color:var(--blueprint)">Priscilla Praxedes</strong>
+  </p>
+  <p style="margin-top:10px;font-size:0.78rem">
+    Material construído com <span class="heart">♥</span> para quem vai construir software de verdade.
+  </p>
+</footer>
+
+<script src="shared/scripts.js" defer></script>
+<script type="module" src="shared/motion-fx.js"></script>
+</body>
+</html>
