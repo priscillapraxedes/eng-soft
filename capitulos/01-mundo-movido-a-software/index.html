@@ -46,7 +46,7 @@
     display:inline-block;margin-bottom:12px;
     font-family:'JetBrains Mono',monospace;
     font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
-    font-size:0.64rem;font-weight:700;letter-spacing:2px;
+    font-size:0.7rem;font-weight:700;letter-spacing:2px;
     padding:4px 11px;border-radius:20px;
     background:rgba(255,255,255,0.06);color:var(--text-dim);
   }
@@ -91,7 +91,7 @@
     margin-top:9px;display:inline-block;
     font-family:'JetBrains Mono',monospace;
     font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
-    font-size:0.66rem;font-weight:700;letter-spacing:0.6px;
+    font-size:0.7rem;font-weight:700;letter-spacing:0.6px;
     color:var(--teste);background:rgba(255,107,107,0.12);
     padding:4px 10px;border-radius:20px;
   }
@@ -119,7 +119,7 @@
   .anat-elo-nome{
     font-family:'JetBrains Mono',monospace;
     font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
-    font-size:0.55rem;font-weight:700;letter-spacing:0.4px;
+    font-size:0.7rem;font-weight:700;letter-spacing:0.4px;
     color:var(--text-dim);text-align:center;
   }
   .anat-elo.on .anat-elo-nome{color:var(--text)}
@@ -146,7 +146,7 @@
   .anat-etapa{
     font-family:'JetBrains Mono',monospace;
     font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
-    font-size:0.68rem;font-weight:700;letter-spacing:1.2px;
+    font-size:0.7rem;font-weight:700;letter-spacing:1.2px;
     color:var(--text);
   }
   .anat-st{
@@ -209,7 +209,7 @@
     .anat-elo-num{
       font-family:'JetBrains Mono',monospace;
       font-variant-ligatures:none;font-feature-settings:"liga" 0,"clig" 0,"calt" 0;
-      font-size:0.58rem;color:var(--text-dim);
+      font-size:0.7rem;color:var(--text-dim);
     }
     .anat-log .ln{grid-template-columns:1fr;row-gap:0}
     .anat-log .ln:not(.full) > span:last-child{padding-left:14px}
@@ -301,15 +301,16 @@
   </div>
   <div class="sidebar-group">
     <div class="sidebar-group-title">Neste capítulo</div>
-    <a class="sidebar-link" onclick="goTo('aquecimento')"><span class="dot" style="background:var(--accent5)"></span> Aquecimento</a>
-    <a class="sidebar-link" onclick="goTo('o-que-e')"><span class="dot" style="background:var(--blueprint)"></span> 🏗️ Engenharia não é programação</a>
-    <a class="sidebar-link" onclick="goTo('desastres')"><span class="dot" style="background:var(--teste)"></span> 💥 Quando o software falha</a>
-    <a class="sidebar-link" onclick="goTo('anatomia')"><span class="dot" style="background:var(--teste)"></span> 🧨 Anatomia de um fracasso</a>
-    <a class="sidebar-link" onclick="goTo('o-que-busca')"><span class="dot" style="background:var(--accent5)"></span> 🎯 O que a engenharia busca</a>
-    <a class="sidebar-link" onclick="goTo('mito')"><span class="dot" style="background:var(--mito)"></span> Mito × Realidade</a>
-    <a class="sidebar-link" onclick="goTo('ia')"><span class="dot" style="background:var(--ia)"></span> 🤖 E a IA nisso?</a>
-    <a class="sidebar-link" onclick="goTo('dinamica')"><span class="dot" style="background:var(--dinamica)"></span> 🎲 Dinâmica em sala</a>
-    <a class="sidebar-link" onclick="goTo('resumo')"><span class="dot" style="background:var(--agil)"></span> Resumo</a>
+    <a class="sidebar-link" href="#aquecimento" onclick="goTo('aquecimento');return false"><span class="dot" style="background:var(--accent5)"></span> Aquecimento</a>
+    <a class="sidebar-link" href="#o-que-e" onclick="goTo('o-que-e');return false"><span class="dot" style="background:var(--blueprint)"></span> 🏗️ Engenharia não é programação</a>
+    <a class="sidebar-link" href="#desastres" onclick="goTo('desastres');return false"><span class="dot" style="background:var(--teste)"></span> 💥 Quando o software falha</a>
+    <a class="sidebar-link" href="#anatomia" onclick="goTo('anatomia');return false"><span class="dot" style="background:var(--teste)"></span> 🧨 Anatomia de um fracasso</a>
+    <a class="sidebar-link" href="#o-que-busca" onclick="goTo('o-que-busca');return false"><span class="dot" style="background:var(--accent5)"></span> 🎯 O que a engenharia busca</a>
+    <a class="sidebar-link" href="#mito" onclick="goTo('mito');return false"><span class="dot" style="background:var(--mito)"></span> Mito × Realidade</a>
+    <a class="sidebar-link" href="#ia" onclick="goTo('ia');return false"><span class="dot" style="background:var(--ia)"></span> 🤖 E a IA nisso?</a>
+    <a class="sidebar-link" href="#dinamica" onclick="goTo('dinamica');return false"><span class="dot" style="background:var(--dinamica)"></span> 🎲 Dinâmica em sala</a>
+    <a class="sidebar-link" href="#quiz-final" onclick="goTo('quiz-final');return false"><span class="dot" style="background:var(--agil)"></span> ✅ Fechando a conta</a>
+    <a class="sidebar-link" href="#resumo" onclick="goTo('resumo');return false"><span class="dot" style="background:var(--agil)"></span> Resumo</a>
   </div>
 </nav>
 
@@ -334,14 +335,14 @@
   </div>
 </section>
 
-<div class="container">
+<main><div class="container">
 
   <!-- ═══════════════ 1. AQUECIMENTO ═══════════════ -->
   <section class="step-section" id="aquecimento">
     <div class="step-header">
       <div class="step-number sn-yellow">🤔</div>
       <div>
-        <div class="step-title">Aquecimento</div>
+        <h2 class="step-title">Aquecimento</h2>
         <div class="step-sub">Antes da teoria, uma pergunta desconfortável</div>
       </div>
     </div>
@@ -350,18 +351,19 @@
       <div class="quiz-q">
         <span class="q-emoji">☢️</span>
         Uma máquina de radioterapia entregou a pacientes doses de radiação centenas de vezes maiores
-        que a prescrita. Onde estava o erro?
+        que a prescrita. Qual dessas coisas teria que ter sido diferente para o acidente
+        <em>não</em> acontecer?
       </div>
       <div class="quiz-options">
-        <button class="quiz-opt" onclick="checkQuiz(this,false)">Num bug de código: um contador estourou</button>
-        <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Numa cadeia de decisões de projeto que ninguém barrou</button>
-        <button class="quiz-opt" onclick="checkQuiz(this,false)">No operador, que digitou rápido demais</button>
-        <button class="quiz-opt" onclick="checkQuiz(this,false)">No hardware, que estava descalibrado</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">O contador do software, que estourava a cada 256 passagens</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">As decisões de projeto que tiraram a trava mecânica e confiaram tudo ao software</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">A velocidade de digitação do operador</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">A calibração do hardware</button>
       </div>
       <div class="quiz-feedback"
            data-correct="Exatamente."
-           data-wrong="Entendo a resposta — mas ela é a armadilha do capítulo."
-           data-explain="O contador estourou de verdade, e o operador digitou rápido de verdade. Só que o mesmo defeito já existia nas máquinas anteriores e nunca machucou ninguém, porque havia uma trava mecânica no caminho. Alguém decidiu remover a trava e confiar só no software. Outra pessoa decidiu que software não entrava na análise de risco. Um único programador escreveu o código, sem revisão. Ninguém testou máquina e software juntos. Nenhuma dessas decisões é 'um bug' — e é a soma delas que mata. É disso que trata Engenharia de Software."></div>
+           data-wrong="Sua resposta descreve um fato verdadeiro — só que consertá-lo não teria bastado."
+           data-explain="O contador estourava de verdade, e o operador digitava rápido de verdade. Só que esse mesmo defeito já existia nas máquinas anteriores e nunca machucou ninguém: havia uma trava mecânica no caminho que impedia o disparo errado. Alguém decidiu remover a trava e confiar só no software. Outra pessoa decidiu que software não entrava na análise de risco. Um único programador escreveu o código, sem revisão. Ninguém testou máquina e software juntos. Corrigir o contador salvaria só um dos dois defeitos conhecidos; desfazer aquelas decisões salvaria todos. É disso que trata Engenharia de Software."></div>
     </div>
   </section>
 
@@ -372,7 +374,7 @@
     <div class="step-header">
       <div class="step-number sn-blueprint">🏗️</div>
       <div>
-        <div class="step-title">Engenharia <em>não é</em> programação</div>
+        <h2 class="step-title">Engenharia <em>não é</em> programação</h2>
         <div class="step-sub">Uma coisa é levantar a parede. Outra é decidir onde ela vai.</div>
       </div>
     </div>
@@ -405,6 +407,31 @@
       início da especificação do sistema até a manutenção, depois que ele já entrou em operação.</p>
       <span class="cita-fonte">Repare nas duas pontas: começa <em>antes</em> de existir código e não
       termina quando o sistema entra no ar.</span>
+    </div>
+
+    <h3 style="font-size:1.15rem;font-weight:900;margin:28px 0 6px">De onde veio esse nome</h3>
+    <p>
+      O termo "engenharia de software" não nasceu de um elogio. Ele foi cunhado numa conferência
+      da OTAN em <strong>1968</strong>, na cidade alemã de Garmisch, e a escolha da palavra
+      <em>engenharia</em> foi deliberadamente provocativa: era uma forma de dizer que aquilo que
+      a indústria vinha fazendo com software <strong>não</strong> era engenharia coisa nenhuma.
+    </p>
+    <p>
+      O diagnóstico da época ficou conhecido como <strong>crise do software</strong>. O hardware
+      barateava e ficava mais potente depressa; o software, que precisava acompanhar, estourava
+      prazo, estourava orçamento, chegava cheio de defeito — e, quando chegava, muitas vezes não
+      era o que o cliente tinha pedido. Não havia método, não havia vocabulário comum, não havia
+      nada além do talento individual de quem estava programando.
+    </p>
+    <div class="tip">
+      <div class="tip-icon">🕰️</div>
+      <div class="tip-content">
+        Guarde esta data, porque ela reaparece daqui a pouco. O <strong>Therac-25</strong> matou
+        pacientes em 1985 — <strong>dezessete anos depois</strong> de o mundo já ter dado nome ao
+        problema e fundado uma disciplina para resolvê-lo. A crise do software não é um capítulo
+        encerrado da história: é a razão de existir de tudo o que você vai estudar nesta disciplina,
+        e a lista de desastres da próxima seção é ela continuando.
+      </div>
     </div>
 
     <h3 style="font-size:1.15rem;font-weight:900;margin:28px 0 6px">Programa × produto de software</h3>
@@ -501,7 +528,7 @@
     <div class="step-header">
       <div class="step-number sn-teste">💥</div>
       <div>
-        <div class="step-title">Quando o software falha</div>
+        <h2 class="step-title">Quando o software falha</h2>
         <div class="step-sub">Cinco casos reais, cinco setores diferentes, um padrão só</div>
       </div>
     </div>
@@ -522,7 +549,9 @@
         modos: um feixe fraco de elétrons e um feixe de raios-X muito mais potente, que só é seguro
         porque um alvo metálico grosso fica no caminho atenuando-o. Em seis ocasiões o software
         colocou a máquina para disparar o feixe potente <strong>com o alvo fora de posição</strong>.</p>
-        <p>Tecnicamente, foram duas condições de corrida independentes. Numa delas, se o operador
+        <p>Duas condições de corrida independentes foram identificadas e explicam a maior parte
+        dos casos — os dois primeiros acidentes nunca tiveram causa firmada, e a fabricante chegou
+        a atribuir um deles a uma microchave defeituosa. Numa das condições, se o operador
         editasse a prescrição e voltasse ao topo da tela em menos de oito segundos — exatamente o
         tempo que os ímãs levam para se posicionar — o modo era atualizado na tela, mas não no
         hardware. Na outra, um contador de um byte estourava a cada 256 passagens e, quando zerava,
@@ -549,9 +578,9 @@
       <div class="tl-item">
         <div class="tl-ano">1996</div>
         <div class="tl-titulo">Ariane 5, voo 501: 39 segundos de voo</div>
-        <p>O primeiro voo do foguete europeu Ariane 5 durou 39 segundos. A cerca de 3.700 metros de
-        altitude ele saiu da trajetória, se partiu e explodiu, destruindo os quatro satélites
-        científicos Cluster que levava.</p>
+        <p>O primeiro voo do foguete europeu Ariane 5 durou 39 segundos. A cerca de 4.000 metros de
+        altitude e 1 km da plataforma ele saiu da trajetória, se partiu e explodiu, destruindo os
+        quatro satélites científicos Cluster que levava.</p>
         <p>Dentro do sistema de referência inercial, uma conversão de um número real de 64 bits para
         um inteiro com sinal de 16 bits estourou. Essa conversão específica não tinha tratamento de
         exceção — outras, no mesmo trecho, tinham. E, pela especificação, exceção significava
@@ -633,7 +662,7 @@
         e o código novo estava certo. O que faltou foi processo de entrega — implantação verificada,
         código morto removido, alerta com dono e um jeito de parar o sistema sem antes descobrir o
         porquê.</div>
-        <span class="tl-custo">mais de US$ 460 milhões em 45 min · 4 milhões de ordens enviadas para atender 212 · multa de US$ 12 mi · ~75% do valor de mercado perdido em 2 dias</span>
+        <span class="tl-custo">mais de US$ 460 milhões em 45 min · 4 milhões de execuções em 154 papéis a partir de 212 ordens de clientes · multa de US$ 12 mi · ~75% do valor de mercado perdido em 2 dias</span>
         <span class="tl-fonte">Fonte primária: ordem administrativa da SEC nº 34-70694, de
         16/10/2013. A própria Knight anunciou "aproximadamente US$ 440 milhões"; a SEC consolidou
         "mais de US$ 460 milhões" — as duas cifras circulam, e a diferença é de base e momento de
@@ -646,9 +675,9 @@
         <div class="tl-titulo">C&amp;M Software: quando o defeito não é de código</div>
         <p>A C&amp;M é uma provedora de serviços de tecnologia que conecta instituições financeiras à
         rede do Sistema Financeiro Nacional. Ela não movimenta dinheiro próprio: é o encanamento por
-        onde passam as mensagens de pagamento. Na noite de 1º para 2 de julho de 2025, criminosos
+        onde passam as mensagens de pagamento. Na noite de 30 de junho de 2025, criminosos
         entraram na infraestrutura dela usando <strong>credenciais legítimas</strong> de um
-        funcionário e emitiram ordens de transferência a partir das contas-reserva que os bancos
+        funcionário terceirizado e emitiram ordens de transferência a partir das contas-reserva que os bancos
         mantêm no Banco Central. O dinheiro saiu por Pix, foi pulverizado e convertido em
         criptomoedas.</p>
         <p>Não foi um bug — e é exatamente por isso que este caso entra aqui. Um operador de TI
@@ -697,7 +726,7 @@
     <div class="step-header">
       <div class="step-number sn-red">🧨</div>
       <div>
-        <div class="step-title">Anatomia de um fracasso</div>
+        <h2 class="step-title">Anatomia de um fracasso</h2>
         <div class="step-sub">Desmontando a cadeia, elo por elo</div>
       </div>
     </div>
@@ -743,7 +772,8 @@
       <li class="anat-elo" data-st=""><span class="anat-elo-ic">○</span><span class="anat-elo-nome">OPERAÇÃO</span><span class="anat-elo-num">5</span></li>
     </ol>
 
-    <div class="anat-fases" id="anat-fases" aria-live="polite"></div>
+    <div class="anat-fases" id="anat-fases"></div>
+      <p role="status" class="sr-only" id="anat-status"></p>
 
     <div class="sim-out anat-log" id="anat-log" aria-hidden="true"></div>
 
@@ -769,10 +799,11 @@
     <div class="warning">
       <div class="warning-icon">⚠️</div>
       <div class="warning-content">
-        <strong>Repare no caso da Knight Capital:</strong> o primeiro estágio fica branco. O
-        requisito estava perfeito, o pedido do negócio era claro e o código novo funcionava. Ainda
-        assim a empresa quase desapareceu. Isso derruba a conclusão preguiçosa de que "basta escrever
-        bem o requisito" — desastre não precisa de requisito ruim, precisa só de processo frouxo.
+        <strong>Antes de seguir, clique em "Knight Capital" no simulador acima</strong> e olhe o
+        primeiro estágio: ele fica branco. O requisito estava perfeito, o pedido do negócio era claro
+        e o código novo funcionava. Ainda assim a empresa quase desapareceu. Isso derruba a conclusão
+        preguiçosa de que "basta escrever bem o requisito" — desastre não precisa de requisito ruim,
+        precisa só de processo frouxo.
       </div>
     </div>
   </section>
@@ -784,7 +815,7 @@
     <div class="step-header">
       <div class="step-number sn-yellow">🎯</div>
       <div>
-        <div class="step-title">O que a engenharia busca</div>
+        <h2 class="step-title">O que a engenharia busca</h2>
         <div class="step-sub">Spoiler: não é a solução perfeita</div>
       </div>
     </div>
@@ -895,9 +926,9 @@
       <div class="tip-icon">🔍</div>
       <div class="tip-content">
         <strong>Quem define a métrica define o resultado.</strong> Eveleens e Verhoef (IEEE Software,
-        2010) aplicaram a definição de "sucesso" do CHAOS a 5.457 previsões reais e mostraram que uma
-        organização com estimativas comprovadamente não enviesadas ainda marcaria só 35% de sucesso
-        por aquele critério. Pior: ao adotar a definição, os gerentes passaram a inflar orçamentos
+        2010) aplicaram a definição de "sucesso" do CHAOS a um acervo de 5.457 previsões reais e mostraram
+        que mesmo a organização mais bem calibrada do conjunto — com estimativas comprovadamente não
+        enviesadas — marcaria só 35% de sucesso por aquele critério. Pior: ao adotar a definição, os gerentes passaram a inflar orçamentos
         para caber nela, e a qualidade das previsões piorou.<br><br>
         Guarde os dois usos disso. Primeiro: <strong>a definição de "projeto bem-sucedido" é ela
         própria um requisito</strong> — se for mal escrita, toda a medição perde sentido.
@@ -915,7 +946,7 @@
     <div class="step-header">
       <div class="step-number sn-red">🎭</div>
       <div>
-        <div class="step-title">Mito × Realidade</div>
+        <h2 class="step-title">Mito × Realidade</h2>
         <div class="step-sub">Um por capítulo — e este é o mais teimoso de todos</div>
       </div>
     </div>
@@ -935,6 +966,13 @@
         <strong>obrigação</strong> de perguntar: essa premissa ainda vale no contexto novo? quem mais
         lê essa chave de configuração? alguém já testou o sistema inteiro junto, e não só as peças?
         esses 97 e-mails de erro têm dono?</p>
+        <p>Repare em quem estava na posição de evitar cada desastre. No Mars Climate Orbiter, quem
+        tinha a informação que salvaria a missão era a equipe de navegação de operações — que não
+        escrevia o software de solo. No Therac-25, quem viu o problema primeiro foram os
+        <strong>operadores</strong> das máquinas, ignorados por meses. Na C&amp;M, o elo quebrado era
+        um processo de concessão de acesso, não uma linha de código.
+        <strong>As decisões que evitam desastre quase nunca são tomadas por quem está
+        digitando.</strong></p>
         <p>Papelada é o que sobra quando o processo vira ritual sem propósito — e isso existe, é
         ruim, e você vai encontrar. Engenharia de Software é o contrário: o
         <strong>conjunto mínimo de perguntas e barreiras</strong> que impede a sua boa ideia de virar
@@ -951,7 +989,7 @@
     <div class="step-header">
       <div class="step-number sn-purple">🤖</div>
       <div>
-        <div class="step-title">E a IA nisso?</div>
+        <h2 class="step-title">E a IA nisso?</h2>
         <div class="step-sub">A provocação de sempre, sem resposta pronta</div>
       </div>
     </div>
@@ -984,7 +1022,7 @@
     <div class="step-header">
       <div class="step-number sn-etica">🎲</div>
       <div>
-        <div class="step-title">Dinâmica em sala</div>
+        <h2 class="step-title">Dinâmica em sala</h2>
         <div class="step-sub">Roteiro para conduzir a atividade presencial</div>
       </div>
     </div>
@@ -1045,12 +1083,103 @@
 
   <div class="section-connector"><div class="line"></div></div>
 
-  <!-- ═══════════════ 9. RESUMO ═══════════════ -->
+  <!-- ═══════════════ 9. QUIZ FINAL ═══════════════ -->
+  <section class="step-section" id="quiz-final">
+    <div class="step-header">
+      <div class="step-number sn-agil">✅</div>
+      <div>
+        <h2 class="step-title">Fechando a conta</h2>
+        <div class="step-sub">Quatro perguntas para ver se a ideia central pegou</div>
+      </div>
+    </div>
+
+    <p class="text-dim" style="font-size:0.93rem;margin-bottom:18px">
+      Nenhuma delas é de decorar data ou número. Todas pedem que você
+      <strong style="color:var(--text)">classifique uma situação nova</strong> com o que acabou de ler.
+    </p>
+
+    <div class="quiz">
+      <div class="quiz-q">
+        <span class="q-emoji">🏥</span>
+        Um hospital compra um sistema de agendamento que funciona bem há três anos. A clínica abre
+        uma unidade em outro estado, com fuso diferente, e as consultas passam a ser marcadas com
+        uma hora de erro. O código não foi alterado. Em qual estágio nasceu esse problema?
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Requisito — havia uma premissa não escrita: "todo mundo no mesmo fuso"</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">Código — falta tratar fuso horário</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">Teste — ninguém testou com dois fusos</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">Operação — a unidade nova foi mal configurada</button>
+      </div>
+      <div class="quiz-feedback"
+           data-correct="É o Ariane 5 de novo, em versão hospitalar."
+           data-wrong="Todas essas afirmações são verdadeiras — mas descrevem onde o erro APARECEU, não onde ele nasceu."
+           data-explain="O software funcionava perfeitamente para o contexto em que foi especificado. Quando o contexto mudou, a premissa silenciosa virou defeito. É exatamente o padrão do Ariane 5: código correto, para outro foguete. O teste e o código só falham depois; a origem é o requisito que nunca foi escrito porque parecia óbvio demais."></div>
+    </div>
+
+    <div class="quiz">
+      <div class="quiz-q">
+        <span class="q-emoji">💸</span>
+        Em qual dos casos deste capítulo o pedido do negócio estava correto, o código novo funcionava
+        como esperado, e mesmo assim a empresa quase desapareceu?
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">Therac-25</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">Mars Climate Orbiter</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Knight Capital</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">C&amp;M Software</button>
+      </div>
+      <div class="quiz-feedback"
+           data-correct="Isso. E é o caso mais desconfortável dos cinco."
+           data-wrong="Volte ao simulador e olhe qual caso tem o primeiro estágio em branco."
+           data-explain="Na Knight Capital o requisito era legítimo e claro, e o código novo fazia o que devia. O que quebrou foi tudo em volta: uma chave de configuração reciclada, código morto que nunca foi apagado, uma implantação manual em oito servidores onde um ficou para trás e nenhum plano de reverter. Desastre não precisa de requisito ruim — precisa só de processo frouxo."></div>
+    </div>
+
+    <div class="quiz">
+      <div class="quiz-q">
+        <span class="q-emoji">📦</span>
+        Você escreveu sozinho um script que organiza suas fotos. Funciona. O que faria dele um
+        <em>produto de software</em>?
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">Reescrevê-lo numa linguagem compilada</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">Passar de 100 para 5.000 linhas</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Outras pessoas passarem a depender dele, e outra pessoa passar a mantê-lo</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">Colocá-lo num repositório público</button>
+      </div>
+      <div class="quiz-feedback"
+           data-correct="A régua é essa mesmo."
+           data-wrong="A diferença não é de tamanho, de linguagem, nem de onde o arquivo está guardado."
+           data-explain="Nada disso muda a natureza da coisa. O que muda é a entrada de OUTRAS PESSOAS e de TEMPO: gente que você não conhece usando, entradas que você não previu, e alguém que não é você tendo que entender o código daqui a dois anos. É aí que requisito escrito, teste e documentação deixam de ser burocracia e viram a única memória que sobra."></div>
+    </div>
+
+    <div class="quiz">
+      <div class="quiz-q">
+        <span class="q-emoji">📊</span>
+        Um colega afirma: "está provado que corrigir um defeito em produção custa 100 vezes mais do
+        que corrigi-lo na fase de requisitos". Qual é a melhor reação?
+      </div>
+      <div class="quiz-options">
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">Aceitar: é um número clássico da área</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">Rejeitar: defeito tardio não custa mais caro</button>
+        <button class="quiz-opt" data-correct="true" onclick="checkQuiz(this,true)">Aceitar a direção, desconfiar do número e perguntar de onde ele saiu</button>
+        <button class="quiz-opt" onclick="checkQuiz(this,false)">Pedir que ele meça na própria equipe antes de afirmar qualquer coisa</button>
+      </div>
+      <div class="quiz-feedback"
+           data-correct="É a postura que o capítulo inteiro tenta construir."
+           data-wrong="Cuidado com os dois extremos."
+           data-explain="A direção é sólida e bem sustentada: quanto mais tarde o defeito é descoberto, mais caro sai consertá-lo. Já o multiplicador exato viaja de citação em citação há décadas, e boa parte das versões não rastreia até nenhuma medição. Engenheiro não escolhe entre engolir e rejeitar: ele pergunta de onde veio o número, e usa a tendência sem fingir precisão que ninguém tem."></div>
+    </div>
+  </section>
+
+  <div class="section-connector"><div class="line"></div></div>
+
+  <!-- ═══════════════ 10. RESUMO ═══════════════ -->
   <section class="step-section" id="resumo">
     <div class="step-header">
       <div class="step-number sn-mint">✅</div>
       <div>
-        <div class="step-title">O que ficou</div>
+        <h2 class="step-title">O que ficou</h2>
         <div class="step-sub">Cinco frases para levar deste capítulo</div>
       </div>
     </div>
@@ -1094,11 +1223,11 @@
 
     <div class="cap-nav">
       <a class="nav-voltar" href="../../">← voltar ao hub</a>
-      <a class="nav-proximo" href="../02-etica-do-engenheiro/">Próximo: Cap 02 — Ética do engenheiro 🚀 »</a>
+      <span class="nav-proximo em-breve" aria-disabled="true">Próximo: Cap 02 — Ética do engenheiro · em breve 🔒</span>
     </div>
   </section>
 
-</div>
+</div></main>
 
 <footer class="footer">
   <p>
@@ -1116,33 +1245,18 @@
   </p>
 </footer>
 
-<script src="../../shared/scripts.js" defer></script>
+<!-- SEM defer, de propósito: o bloco inline abaixo depende de window.onView, e um
+     script deferido só roda DEPOIS dos inline. Como já estamos no fim do body, carregar
+     de forma síncrona aqui não bloqueia nada. -->
+<script src="../../shared/scripts.js"></script>
 <script type="module" src="../../shared/motion-fx.js"></script>
 
 <script>
 /* =========================================================
-   REDE DE SEGURANÇA DA LINHA DO TEMPO
-   O initTimelines() do shared observa o .timeline INTEIRO com
-   threshold 0.15. Os casos deste capítulo são longos: no celular
-   a linha passa de 7.000px, então a razão de interseção máxima
-   fica em ~0.11 e o observador NUNCA dispara — os cinco casos
-   ficariam invisíveis (opacity:0) para sempre.
-   Aqui cada item é observado individualmente. Somar .on duas
-   vezes é inofensivo, então isto convive com o shared.
+   A cascata da linha do tempo é responsabilidade do
+   shared/scripts.js (initTimelines), que observa item a item.
+   Nada a fazer aqui.
    ========================================================= */
-(function(){
-  'use strict';
-  var itens = document.querySelectorAll('.timeline .tl-item');
-  if (!itens.length) return;
-  if (typeof window.onView !== 'function'){
-    for (var i=0;i<itens.length;i++) itens[i].classList.add('on');
-    return;
-  }
-  Array.prototype.forEach.call(itens, function(item){
-    window.onView(item, function(){ item.classList.add('on'); },
-                  {threshold:0.02, rootMargin:'0px 0px -30px 0px'});
-  });
-})();
 
 /* =========================================================
    SIMULADOR: Anatomia de um fracasso
@@ -1165,7 +1279,7 @@
     ariane: {
       nome:'Ariane 5 — voo 501',
       linha:'Um foguete europeu se despedaça 39 segundos depois de decolar. O software funcionava perfeitamente — para outro foguete.',
-      custo:'cerca de US$ 370 milhões · 4 satélites perdidos · sem vítimas',
+      custo:'estimativas de imprensa: US$ 370 a 500 milhões (o relatório oficial não traz cifra) · 4 satélites · sem vítimas',
       moral:'Reusar código é reusar as premissas dele. Se o contexto mudou, código "já testado" é código novo.',
       fases:[
         {st:'intro',
@@ -1213,7 +1327,7 @@
     knight: {
       nome:'Knight Capital',
       linha:'Uma corretora de Wall Street perde meio bilhão de dólares em 45 minutos por causa de um arquivo que não foi copiado para um servidor.',
-      custo:'cerca de US$ 460 milhões em 45 minutos · a empresa não sobreviveu sozinha',
+      custo:'circulam US$ 440 e US$ 460 milhões · 45 minutos · a empresa não sobreviveu sozinha',
       moral:'O requisito estava certo e o código novo estava certo. O que faltou foi processo de entrega — e é assim que a maioria dos desastres modernos acontece.',
       fases:[
         {st:'ok',
@@ -1360,6 +1474,10 @@
     logLinha(' ', '', 'muted', true);
     logLinha('>> ' + pegaveis + ' de 5 estágios tinham como interromper a cadeia', '', 'warn', true);
     logLinha('>> barreiras que de fato funcionaram: 0', '', 'bad', true);
+
+    var elStatus = document.getElementById('anat-status');
+    if (elStatus) elStatus.textContent =
+      caso.nome + ': ' + pegaveis + ' de 5 estágios tinham como interromper a cadeia.';
 
     elVerNum.textContent = String(pegaveis);
     elVerLead.textContent = pegaveis === 1 ? 'ponto' : 'pontos';

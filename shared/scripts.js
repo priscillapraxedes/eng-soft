@@ -73,13 +73,28 @@ function initReveals(){
   revealOnView('.blueprint',  'visible', {threshold:0.25});
 }
 
-/* ---------- Linha do tempo: itens entram em cascata ---------- */
+/* ---------- Linha do tempo: itens entram em cascata ----------
+   Observa cada ITEM, nunca a linha inteira: uma timeline longa
+   (vários milhares de px) jamais alcança um threshold de 0,15 do
+   próprio tamanho, e os itens ficariam invisíveis para sempre.
+   O escalonamento acontece por proximidade: itens que entram na
+   mesma leva ganham um atraso crescente.                        */
 function initTimelines(){
   document.querySelectorAll('.timeline').forEach(tl => {
     const itens = [...tl.querySelectorAll('.tl-item')];
-    onView(tl, () => {
-      itens.forEach((li, i) => setTimeout(() => li.classList.add('on'), i * 220));
-    }, {threshold:0.15});
+    let leva = 0, ultimoDisparo = 0;
+    const obs = new IntersectionObserver((entries, o) => {
+      for (const e of entries){
+        if (!e.isIntersecting) continue;
+        o.unobserve(e.target);
+        const agora = Date.now();
+        leva = (agora - ultimoDisparo < 400) ? leva + 1 : 0;
+        ultimoDisparo = agora;
+        const alvo = e.target;
+        setTimeout(() => alvo.classList.add('on'), Math.min(leva, 6) * 180);
+      }
+    }, {threshold:0.02, rootMargin:'0px 0px -30px 0px'});
+    itens.forEach(li => obs.observe(li));
   });
 }
 

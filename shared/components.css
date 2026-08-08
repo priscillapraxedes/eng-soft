@@ -902,3 +902,12 @@ pre{
   .mr-mito p{padding-right:0;padding-top:34px}
   .mr-carimbo{top:12px;left:24px;right:auto}
 }
+
+/* =========================================================
+   SR-ONLY — texto só para leitor de tela (regiões de status)
+   ========================================================= */
+.sr-only{
+  position:absolute;width:1px;height:1px;
+  padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0,0,0,0);white-space:nowrap;border:0;
+}

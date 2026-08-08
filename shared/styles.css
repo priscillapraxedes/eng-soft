@@ -309,6 +309,15 @@ body{
   transition:opacity 0.7s ease,transform 0.7s ease;
 }
 .step-section.visible{opacity:1;transform:translateY(0)}
+/* rede de segurança: sem JS (file://, shared/ ausente, rede caída) o
+   scroll-reveal nunca roda e a página inteira ficaria invisível */
+@media (scripting: none){
+  .step-section{opacity:1;transform:none}
+  .tl-item{opacity:1;transform:none}
+  .mito-real .mr-carimbo{opacity:0.9;transform:rotate(-11deg) scale(1)}
+  .blueprint .draw{stroke-dashoffset:0}
+  .blueprint .fade{opacity:1}
+}
 .step-header{display:flex;align-items:center;gap:16px;margin-bottom:24px}
 .step-number{
   width:52px;height:52px;border-radius:14px;

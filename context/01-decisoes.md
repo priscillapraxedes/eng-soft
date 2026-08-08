@@ -80,3 +80,64 @@ Aplicado da lente "regras":
 `→ ⇒ ≠ ≥ ≤ ↘` são proibidos e barrados pelo checador.
 
 **Repositório:** https://github.com/kelsonvictr/eng-soft.git (`main`).
+
+### Rodada 2 de auditoria (lentes técnica e factual-didática)
+
+**Corrigido no `shared/` — valia para todos os capítulos futuros:**
+- `initTimelines()` observava o `.timeline` INTEIRO com `threshold:0.15`. Uma linha do tempo
+  longa (a deste capítulo passa de 4.000px) nunca alcança 15% do próprio tamanho na tela,
+  então o observador **nunca disparava** e os itens ficavam `opacity:0` para sempre.
+  Agora observa **item a item** (`threshold:0.02`), com escalonamento por proximidade.
+- `@media (scripting: none)` em `styles.css`: sem JS, o scroll-reveal não roda e a página
+  inteira ficava em branco (`.step-section{opacity:0}`). Agora revela tudo estático.
+- `.sr-only` adicionado ao `components.css`.
+
+**Corrigido no Cap 01:**
+- **`defer` invertia a ordem de execução.** Script deferido roda DEPOIS dos inline, então
+  `window.onView` era `undefined` quando o bloco inline rodava, e os simuladores caíam no
+  fallback: a animação de ~6s se esgotava com o aluno ainda no topo da página. `defer` removido
+  (a tag já está no fim do `<body>`). **Convenção: nunca usar `defer` no `shared/scripts.js`
+  quando o capítulo tiver bloco inline que dependa de `onView`.**
+- Data do ataque à C&M estava errada (dizia 1º-2/07; foi na **noite de 30/06/2025** — confirmado
+  na web). O material confundia a data do ataque com a da resposta regulatória.
+- Therac-25: "foram duas condições de corrida" atribuía os 6 acidentes às duas condições, mas
+  Leveson & Turner registram que **os dois primeiros nunca tiveram causa firmada**.
+- Altitude do Ariane 5: 3.700 m (fonte secundária) → **4.000 m e 1 km da plataforma**, que é o
+  que o relatório Lions declarado como fonte de fato diz.
+- Knight Capital: "4 milhões de ordens enviadas" → **4 milhões de execuções** a partir de 212
+  ordens (ordem SEC 34-70694).
+- Eveleens & Verhoef: os 35% são da organização mais bem calibrada, não das 5.457 previsões.
+- Custos do simulador vendiam como cifra fechada os números que a própria timeline ensina a
+  duvidar — agora trazem a faixa e a ressalva.
+
+**Lacunas do plano que foram preenchidas:**
+- **Crise do software** (OTAN/Garmisch 1968) não existia no capítulo, embora o plano peça.
+  Entrou como seção "De onde veio esse nome", amarrando com o Therac-25 ser 17 anos depois.
+- **Quiz final** não existia (o plano prevê Dinâmica → Quiz final → Resumo). Entraram 4
+  perguntas de discriminação, não de memorização.
+
+**Didática:**
+- O quiz de aquecimento punia uma resposta factualmente verdadeira ("o contador estourou").
+  Enunciado trocado de "Onde estava o erro?" para "Qual dessas coisas teria que ter sido
+  diferente para o acidente NÃO acontecer?" — agora o gabarito é certo por mérito.
+- A caixa após o simulador mandava reparar na Knight Capital, mas o simulador abre em Ariane 5.
+  Virou convite explícito para clicar.
+- O bloco Mito × Realidade ganhou parágrafo ancorando nos casos: quem podia evitar cada desastre
+  não era quem digitava (navegação do Mars, operadores do Therac, processo de acesso da C&M).
+  Isso legitima o recorte da disciplina para quem não programa.
+
+**Acessibilidade:**
+- Os 9 links do índice eram `<a>` sem `href` — fora da ordem de tabulação e invisíveis para
+  leitor de tela. Todos ganharam `href="#id"`.
+- A página tinha ZERO `<h2>` em 17.000px: os títulos de seção eram `<div>`. Viraram `<h2>`.
+  Adicionado landmark `<main>`.
+- `aria-live` estava no contêiner do simulador, fazendo o leitor reler ~2.000 caracteres a cada
+  troca de caso. Agora é uma região `role="status"` curta com uma frase.
+- Piso de 0.7rem nos rótulos (havia texto de 8,8px, ilegível projetado em sala).
+- Botão "Próximo: Cap 02" apontava para diretório inexistente (404 no telão). Virou estado
+  `.em-breve` até o capítulo existir.
+
+**Pendência consciente (não aplicada):** a auditoria sugere enxugar ~540 palavras da linha do
+tempo, porque Therac/Ariane/Knight reaparecem no simulador. É decisão didática da professora —
+o material fica no ar para consulta, e a densidade pode ser desejável como referência. Registrado
+para conversar antes de cortar.
